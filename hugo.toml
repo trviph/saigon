@@ -1,9 +1,9 @@
 baseURL = '/'
 defaultContentLanguage = 'vi'
 defaultContentLanguageInSubdir = false
+theme = 're-terminal'
 
 [params]
-theme = 're-terminal'
 themeColor = 'green'
 centerTheme = true
 

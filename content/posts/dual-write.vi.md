@@ -10,9 +10,9 @@ readingTime = true
 color = "green"
 +++
 
-# Dual Write
+# Giới Thiệu
 
-bla
+{{< image src="/img/dual-write/intro-dark.vi.svg" alt="" position="center" style="border-radius: 8px;" >}}
 
 # Đọc Thêm
 

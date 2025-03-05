@@ -12,7 +12,13 @@ color = "green"
 
 # Introduction
 
-While working with distributed systems,
+While working with backend systems, there is a common pattern when handling incoming data.
+We usually have a server waiting to receive data from a message broker or an API.
+When the data arrives, we process the data based on the business contract and then insert
+or update that data into the database, before also transmitting the data to the next server
+via a message broker or an API.
+
+{{< image src="/img/dual-write/intro-dark.en.svg" alt="" position="center" style="border-radius: 8px;" >}}
 
 # Read More
 
