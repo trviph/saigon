@@ -4,15 +4,11 @@ date = "2025-03-05T19:27:42+07:00"
 author = "trviph"
 tags = ["backend", "data-consistency"]
 keywords = ["backend", "data-consistency"]
-description = "Tìm hiểu về dual write và các vấn đề về nó, đồng thời giới thiệu các cách khắc phục."
+cover = "/img/dual-write/intro-light.vi.svg"
 showFullContent = false
 readingTime = true
 color = "paper"
 +++
-
-# Giới Thiệu
-
-{{< image src="/img/dual-write/intro-light.vi.svg" alt="" position="center" >}}
 
 # Đọc Thêm
 

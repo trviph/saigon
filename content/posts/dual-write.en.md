@@ -4,21 +4,25 @@ date = "2025-03-05T19:27:42+07:00"
 author = "trviph"
 tags = ["backend", "data-consistency"]
 keywords = ["backend", "data-consistency"]
-description = "Discussing about dual write and its problems, also introducing some patterns to mitigate them."
+cover = "/img/dual-write/intro-light.en.svg"
+coverCaption = ""
 showFullContent = false
 readingTime = true
 color = "paper"
 +++
 
-# Introduction
-
 While working with backend systems, there is a common pattern when handling incoming data.
 We usually have a server waiting to receive data from a message broker or an API.
 When the data arrives, we process the data based on the business contract and then insert
-or update that data into the database, before also transmitting the data to the next server
-via a message broker or an API.
+or update that data into the database before also transmitting the data to the next server
+via a message broker or an API. This data processing pattern is called a dual write,
+sometimes also called multi-write or sync-write.
 
-{{< image src="/img/dual-write/intro-light.en.svg" alt="" position="center" >}}
+# Problem
+
+This pattern seems to be pretty intuitive, so what is its problem?
+The main problem with this pattern is that it is prone to failures that can often lead to
+data inconsistencies, which require hair-pulling debug sessions to *maybe* identify the cause.
 
 # Read More
 
