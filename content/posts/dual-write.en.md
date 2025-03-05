@@ -7,7 +7,7 @@ keywords = ["backend", "data-consistency"]
 description = "Discussing about dual write and its problems, also introducing some patterns to mitigate them."
 showFullContent = false
 readingTime = true
-color = "green"
+color = "paper"
 +++
 
 # Introduction
@@ -18,7 +18,7 @@ When the data arrives, we process the data based on the business contract and th
 or update that data into the database, before also transmitting the data to the next server
 via a message broker or an API.
 
-{{< image src="/img/dual-write/intro-dark.en.svg" alt="" position="center" style="border-radius: 8px;" >}}
+{{< image src="/img/dual-write/intro-light.en.svg" alt="" position="center" >}}
 
 # Read More
 

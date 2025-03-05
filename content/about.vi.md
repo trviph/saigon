@@ -5,7 +5,7 @@ author = 'trviph'
 showFullContent = true
 readingTime = true
 hideComments = true
-color = 'green'
+color = 'paper'
 +++
 
 # Chào đằng ấy, tôi là trviph!

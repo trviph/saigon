@@ -5,7 +5,7 @@ author = 'trviph'
 showFullContent = true
 readingTime = true
 hideComments = true
-color = 'green'
+color = 'paper'
 +++
 
 # Hi there, I'm trviph!

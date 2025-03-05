@@ -1,0 +1,18 @@
+:root {
+    --accent: #1d1e28; /* 1 of 5 basic colors */
+    --background: color-mix(
+        in srgb,
+        var(--accent) 2%,
+        #fefcfa 98%
+    ); /* background color; inherit shades of the accent */
+    --accent-contrast-color: white; /* mainly uses for text on the accent backgrounds but not limited */
+    --color: black; /* text color, also some other text use the variable in color mixing */
+    --border-color: rgba(0, 0, 0, 0.1); /* border color */
+    --article-link-color: var(inherit); /* for you, who want to colorize your article links */
+
+    /* code syntax */
+    /* take a look at themes/re-terminal/assets/css/syntax.scss to understand in detail which color stands for */
+    --syntax-func-color: color-mix(in srgb, var(--accent) 70%, #000 30%);
+    --syntax-var-color: color-mix(in srgb, var(--accent) 90%, transparent);
+    --syntax-value-color: color-mix(in srgb, var(--accent), black);
+}

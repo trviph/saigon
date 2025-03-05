@@ -7,12 +7,12 @@ keywords = ["backend", "data-consistency"]
 description = "Tìm hiểu về dual write và các vấn đề về nó, đồng thời giới thiệu các cách khắc phục."
 showFullContent = false
 readingTime = true
-color = "green"
+color = "paper"
 +++
 
 # Giới Thiệu
 
-{{< image src="/img/dual-write/intro-dark.vi.svg" alt="" position="center" style="border-radius: 8px;" >}}
+{{< image src="/img/dual-write/intro-light.vi.svg" alt="" position="center" >}}
 
 # Đọc Thêm
 
