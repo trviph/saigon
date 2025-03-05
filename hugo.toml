@@ -1,0 +1,95 @@
+baseURL = '/'
+defaultContentLanguage = 'vi'
+defaultContentLanguageInSubdir = false
+
+[params]
+theme = 're-terminal'
+themeColor = 'green'
+centerTheme = true
+
+owner = 'trviph'
+
+showLanguageSelector = true
+
+showMenuItems = 2
+
+showLastUpdated = true
+enableGitInfo = true
+
+readingTime = true
+
+
+[pagination]
+pagerSize = 5
+
+[languages]
+[languages.vi]
+languageCode = 'vi'
+languageDirection = 'ltr'
+languageName = 'Tiếng Việt'
+title = 'Trần Vĩnh Phước'
+weight = 1
+
+[languages.vi.params]
+subtitle = 'Trang cá nhân.'
+menuMore = 'Hiển thị thêm'
+readMore = 'Đọc tiếp'
+readOtherPosts = 'Đọc bài khác'
+newerPosts = 'Bài mới hơn'
+olderPosts = 'Bài cũ hơn'
+missingContentMessage = 'Không tìm thấy'
+missingBackButtonLabel = 'Quay lại trang chủ'
+postsForLabel = 'Bài đăng cho'
+updatedDatePrefix = 'Cập nhật'
+minuteReadingTime = 'phút để đọc'
+words = 'chữ'
+
+[languages.vi.params.logo]
+logoText = 'trviph'
+logoHomeLink = '/'
+
+[languages.vi.menu]
+[[languages.vi.menu.main]]
+identifier = "about"
+name = "Thông Tin"
+url = "/about"
+[[languages.vi.menu.main]]
+identifier = "posts"
+name = "Bài Đăng"
+url = "/posts"
+
+
+[languages.en]
+languageCode = 'en'
+languageDirection = 'ltr'
+languageName = 'English'
+title = 'Vinh-Phuoc Tran'
+weight = 2
+
+[languages.en.params]
+subtitle = 'Personal page.'
+menuMore = 'Show more'
+readMore = 'Read more'
+readOtherPosts = 'Read other posts'
+newerPosts = 'Newer posts'
+olderPosts = 'Older posts'
+missingContentMessage = 'Page not found'
+missingBackButtonLabel = 'Back to home page'
+postsForLabel = 'Post for'
+updatedDatePrefix = 'Updated'
+minuteReadingTime = 'min read'
+words = 'words'
+
+[languages.en.params.logo]
+logoText = 'trviph'
+logoHomeLink = '/en'
+
+[languages.en.menu]
+[[languages.en.menu.main]]
+identifier = "about"
+name = "About"
+url = "/en/about"
+[[languages.en.menu.main]]
+identifier = "posts"
+name = "Posts"
+url = "/en/posts"
