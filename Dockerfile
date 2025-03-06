@@ -9,10 +9,11 @@ RUN apk add --update openssl \
 
 FROM scratch AS run
 
-WORKDIR /hugo-server
 ENV HUGO_ENVIRONMENT=production
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=build /hugo /hugo
+
+WORKDIR /hugo-server
 
 COPY . .
 
