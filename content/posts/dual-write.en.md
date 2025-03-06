@@ -37,7 +37,7 @@ downtime due to errors or maintenance, or it was something as simple as human er
 a wrong schema to a wrong API, etc. But whatever the cause, the data is now mismatched and we must
 somehow fix it.
 
-## Examples of Dual Write in E-commerce
+## Examples Of Dual Write In E-commerce
 
 In e-commerce systems, to easily scale out the overall systems and engineering teams. The architect is often
 separated into several services with defined boundaries. Some of the most crucial services,
@@ -63,12 +63,12 @@ be searchable. However, if the inventory management system fails to notify the s
 the listing will never be visible and the seller will lose their potential customer and income.
 This can possibly damage the reputation of the e-commerce platform among sellers.
 
-# Some Solutions that Do not Work
+# Some Solutions That Do Not Work
 
 Now that we know what dual writing is and the problems it brings, let's discuss some solutions
 and why they won't work.
 
-## Revert the Data Back
+## Revert The Data Back
 
 Can we revert the data back? Yes, but a revert is also a fallable operation,
 so what if the revert also fails, not to mention we have to store some kind of state before reverting.
@@ -78,13 +78,13 @@ we won't need to store any state then? A commit is also a fallable operation.
 
 In my humble opinion, this approach gets messy really quickly.
 
-## Save after Sent
+## Save After Sent
 
 How about we only write the data to the database if we succeed in sending it to downstream services?
 This approach is similar with committing after sent we have discussed above, a write to the database
 is not guarantee to success. Simply switching the order of operations solve nothing.
 
-## Retry again
+## Retry Again
 
 If there is a failure retrying again seems to be a good enough solution.
 But let's consider how many times we should retry and what is the interval between them?
@@ -98,7 +98,7 @@ This could work but what if *our* service fails and crashes while retrying? By t
 it is up again, we will surely lose the context of what we were trying to do.
 We will need to store some kind of state for this approach to work. We are getting closer.
 
-# Some Solutions that Do Work
+# Some Solutions That Do Work
 
 In this section, we will be listing some patterns to handle the dual write properly.
 We won't go into any details here, other than just listing their names so we are made aware
