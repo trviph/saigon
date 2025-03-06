@@ -93,7 +93,7 @@ If the receiver is down for a long time, say more than five minutes, most retry 
 would have been given up by then. And after giving up, the data would still be inconsistent in our system.
 We need to think up a better solution.
 
-What if we increase the retry duration by using some techniques `exponential backoff`?
+What if we increase the retry duration by using some techniques like exponential backoff?
 This could work but what if *our* service fails and crashes while retrying? By the next time,
 it is up again, we will surely lose the context of what we were trying to do.
 We will need to store some kind of state for this approach to work. We are getting closer.
