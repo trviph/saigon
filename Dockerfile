@@ -8,13 +8,10 @@ RUN apk add --update openssl \
     && tar xvzf ./hugo_extended_withdeploy_${HUGO_VERSION}_Linux-64bit.tar.gz
 
 FROM scratch AS run
-
+WORKDIR /hugo-server
 ENV HUGO_ENVIRONMENT=production
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY --from=build /hugo /hugo
-
-WORKDIR /hugo-server
-
+COPY --from=build /hugo /hugo-server/hugo
 COPY . .
 
-CMD [ "/hugo", "server", "--renderToMemory", "--minify" ]
+CMD [ "hugo", "server", "--renderToMemory", "--minify" ]
