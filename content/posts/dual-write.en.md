@@ -24,6 +24,39 @@ This pattern seems to be pretty intuitive, so what is its problem?
 The main problem with this pattern is that it is prone to failures that can often lead to
 data inconsistencies, which require hair-pulling debug sessions to *maybe* identify the cause.
 
+{{< image src="/img/dual-write/failure-light.en.svg" alt="" position="center" >}}
+
+{{< code language="css" title="Really cool snippet" id="1" expand="Show" collapse="Hide" isCollapsed="true" >}}
+pre {
+  background: #1a1a1d;
+  padding: 20px;
+  border-radius: 8px;
+  font-size: 1rem;
+  overflow: auto;
+
+  @media (--phone) {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  code {
+    background: none !important;
+    color: #ccc;
+    padding: 0;
+    font-size: inherit;
+  }
+}
+{{< /code >}}
+
+```go
+	import "fmt"
+
+  // your code here
+	func main() {
+		fmt.Println("Hello, World!")
+	}
+```
+
 # Read More
 
 - https://www.confluent.io/blog/dual-write-problem/

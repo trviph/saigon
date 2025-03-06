@@ -5,4 +5,18 @@
     --color: white;
     --border-color: rgba(255, 255, 255, 0.1);
     --article-link-color: var(inherit);
+
+    --syntax-line-highlight-mix: color-mix(in srgb, var(--accent) 90%, #999 10%);
+    --syntax-func-color: color-mix(in srgb, var(--accent) 70%, #999 30%);
+    --syntax-var-color: color-mix(in srgb, var(--accent) 90%, transparent);
+    --syntax-value-color: color-mix(in srgb, var(--accent), white);
+    --syntax-punctuation-color: white;
+    --syntax-cdata-color: rgba(255, 255, 255, 0.3);
+    --syntax-code-toolbar-border-color: rgba(255, 255, 255, 0.1);
+    --syntax-line-highlight-background: hsla(24, 20%, 50%, 0.4);
+    --syntax-line-highlight-color: hsl(24, 20%, 95%);
+    --syntax-line-highlight-box-shadow-color: white;
+    --syntax-copy-button-background: hsla(0, 0%, 87.8%, 0.2);
+    --syntax-copy-button-shadow-color: rgba(0, 0, 0, 0.2);
+    --syntax-copy-button-color: #bbb;
 }

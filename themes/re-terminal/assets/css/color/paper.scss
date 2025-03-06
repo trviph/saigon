@@ -12,7 +12,17 @@
 
     /* code syntax */
     /* take a look at themes/re-terminal/assets/css/syntax.scss to understand in detail which color stands for */
+    --syntax-line-highlight-mix: color-mix(in srgb, var(--accent) 90%, #000 10%);
     --syntax-func-color: color-mix(in srgb, var(--accent) 70%, #000 30%);
-    --syntax-var-color: color-mix(in srgb, var(--accent) 90%, transparent);
+    --syntax-var-color: color-mix(in srgb, var(--accent) 90%, #000);
     --syntax-value-color: color-mix(in srgb, var(--accent), black);
+    --syntax-punctuation-color: black;
+    --syntax-cdata-color: rgba(0, 0, 0, 0.3);
+    --syntax-code-toolbar-border-color: rgba(0, 0, 0, 0.2);
+    --syntax-line-highlight-background: hsla(336, 80%, 50%, 0.4);
+    --syntax-line-highlight-color: hsl(336, 80%, 95%);
+    --syntax-line-highlight-box-shadow-color: black;
+    --syntax-copy-button-background: hsla(360, 100%, 12.2%, 0.2);
+    --syntax-copy-button-shadow-color: rgba(255, 255, 255, 0.2);
+    --syntax-copy-button-color: #444;
 }
