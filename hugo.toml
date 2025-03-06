@@ -1,4 +1,4 @@
-baseURL = '/'
+baseURL = 'https://www.vinhphuoc.dev/'
 defaultContentLanguage = 'vi'
 defaultContentLanguageInSubdir = false
 theme = 're-terminal'
