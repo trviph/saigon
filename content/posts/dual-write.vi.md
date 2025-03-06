@@ -57,10 +57,10 @@ bộ lọc, sở thích, lịch sử mua bán, ...
 
 {{< image src="/img/dual-write/ecommerce-checkout-light.vi.svg" alt="" position="center" >}}
 
-Trong quá trình thanh toán, sau khi người mua đã thanh toán cho một đơn hàng thành công payment gateway
+Trong quá trình thanh toán, sau khi người mua đã thanh toán cho một đơn hàng thành công, payment gateway
 thường có nhiệm vụ phải báo cho OMS biết rằng đơn hàng đã được thanh toán thành công, để có thể chuyển
 sang các trạng thái khác như đóng gói, trung chuyển, ... Tuy nhiên, nếu việc payment gateway thông báo
-cho OMS bị thất bị sẽ dẫn đến việc người dùng đã trả tiền nhưng đươn hàng lại bị hoãn lại, khiến khách
+cho OMS bị thất bại sẽ dẫn đến việc người dùng đã trả tiền nhưng đơn hàng lại bị hoãn lại, khách
 hàng chờ lâu để nhận hỗ trợ, sẽ khiến trải nghiệm mua hàng trở nên tồi tệ.
 
 {{< image src="/img/dual-write/ecommerce-listing-creation-light.vi.svg" alt="" position="center" >}}
@@ -69,8 +69,8 @@ Hay trong quá trình tạo sản phẩm, sau khi người bán tạo sản ph�
 thông báo cho hệ thống tìm kiếm về sản phẩm mới. Khi được thông báo, hệ thống tìm kiếm thường sẽ tạo dữ liệu
 mới về các thông tin sản phẩm và thực hiện index, caching để tối ưu hoá trải nghiệm tìm kiếm. Vì vậy, nếu
 hệ thống quản lý kho thất bại trong việc thông báo sản phẩm mới cho hệ thống tìm kiếm, sẽ khiến cho sản phẩm
-này không tồn tại trên sàn, người mua không thể tìm kiếm ra được. Khiến người bán bị mất đi khách hàng và
-doanh thu của họ, có thể dẫn đến thiệt hại về uy tín cho sản e-commerce trong công đồng người bán.
+này không tồn tại trên sàn, người mua không thể tìm kiếm ra được. Khiến người bán bị mất đi khách hàng ảnh hưởng đến
+doanh thu của họ, có thể dẫn đến thiệt hại về uy tín cho sàn e-commerce trong cộng đồng người bán.
 
 # Một Số Giải Pháp Không Hiệu Quả
 
@@ -99,7 +99,7 @@ quyết được vấn đề.
 ## Thử Lại
 
 Nếu có lỗi xảy ra, thường chỉ cần thử lại sẽ là một cách giải quyết đủ tốt.
-Tuy nhiên, ta cần cần phải chú trọng đến các vấn đề như thử lại bao nhiều lần, khoảng chờ giữa các lần
+Tuy nhiên, ta cần phải chú trọng đến các vấn đề như thử lại bao nhiều lần, khoảng chờ giữa các lần
 thử là bao lâu?
 
 Nếu như service downstream không thể kết nối được trong một khoảng thời gian dài, ví dụ trong năm phút,

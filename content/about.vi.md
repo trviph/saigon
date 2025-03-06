@@ -10,9 +10,9 @@ color = 'paper'
 
 # Chào đằng ấy, tôi là trviph!
 
-Đây là nơi mà tôi sẽ tản mạn về các vấn đề kỹ thuật của ngành phần mềm.
+Đây là nơi mà tôi thỉnh thoảng đăng bài tản mạn về các vấn đề kỹ thuật của ngành phần mềm.
 
-Một số công cụ mà tôi đã sử dụng qua, trong các năm qua:
+Một số công cụ mà tôi đã sử dụng qua trong các năm làm việc:
 
 - **Ngôn ngữ:** Go, Python, Java, Zig, Dart (với Flutter)
 - **Cơ sở dữ liệu:** MySQL, PostgreSQL, MongoDB
