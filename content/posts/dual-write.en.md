@@ -1,6 +1,7 @@
 +++
 title = "Dual Write"
-date = "2025-03-05T19:27:42+07:00"
+date = "2024-12-23T19:27:42+07:00"
+lastmod = "2025-03-05T19:27:42+07:00"
 author = "trviph"
 tags = ["backend", "data-consistency"]
 keywords = ["backend", "data-consistency"]
