@@ -11,7 +11,7 @@ html {
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Fira Code', Monaco, Consolas, Ubuntu Mono, monospace;
+  font-family: 'JetBrains Mono', Monaco, Consolas, Ubuntu Mono, monospace;
   font-size: 1rem;
   line-height: 1.54;
   letter-spacing: -0.02em;
@@ -30,6 +30,7 @@ body {
 }
 
 .headings--one-size {
+
   h1,
   h2,
   h3,
@@ -127,8 +128,9 @@ figure {
   }
 }
 
-code, kbd {
-  font-family: 'Fira Code', Monaco, Consolas, Ubuntu Mono, monospace !important;
+code,
+kbd {
+  font-family: 'Jetbrains Mono', Monaco, Consolas, Ubuntu Mono, monospace !important;
   font-feature-settings: normal;
   background: color-mix(in srgb, var(--accent), transparent 80%);
   color: var(--accent);
@@ -136,7 +138,8 @@ code, kbd {
   margin: 0 2px;
   font-size: .95rem;
 
-  code, kbd {
+  code,
+  kbd {
     background: transparent;
     padding: 0;
     margin: 0;
@@ -152,7 +155,7 @@ pre {
   border-top: 1px solid rgba(255, 255, 255, .1);
   border-bottom: 1px solid rgba(255, 255, 255, .1);
 
-  + pre {
+  +pre {
     border-top: 0;
     margin-top: -40px;
   }
@@ -263,7 +266,7 @@ ol {
   list-style: none;
   counter-reset: li;
 
-  > li {
+  >li {
     counter-increment: li;
 
     &:before {
@@ -275,10 +278,10 @@ ol {
       text-align: right;
     }
 
-    > ol {
+    >ol {
       margin-left: 38px;
 
-      > li {
+      >li {
         counter-increment: li;
 
         &:before {
@@ -342,5 +345,5 @@ hr {
 }
 
 sup {
- line-height: 0;
+  line-height: 0;
 }
