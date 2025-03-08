@@ -41,6 +41,8 @@ postsForLabel = 'Bài đăng cho'
 updatedDatePrefix = 'Cập nhật'
 minuteReadingTime = 'phút để đọc'
 words = 'chữ'
+poweredByLabel = 'được cung cấp bởi'
+madeByLabel = 'được tạo bởi'
 
 [languages.vi.params.logo]
 logoText = 'trviph'
@@ -77,6 +79,8 @@ postsForLabel = 'Post for'
 updatedDatePrefix = 'Updated'
 minuteReadingTime = 'min read'
 words = 'words'
+poweredByLabel = 'Powered by'
+madeByLabel = 'made by'
 
 [languages.en.params.logo]
 logoText = 'trviph'
