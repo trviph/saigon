@@ -1,7 +1,7 @@
 +++
 title = "CAP vs ACID vs BASE?!"
 date = "2025-03-07T15:04:27+07:00"
-lastmode = "2025-03-10T16:08:27+07:00"
+lastmod = "2025-03-10T16:08:27+07:00"
 author = "trviph"
 tags = ["database"]
 keywords = ["database"]
