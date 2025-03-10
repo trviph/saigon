@@ -1,7 +1,7 @@
 +++
-draft = true
 title = "CAP vs ACID vs BASE?!"
 date = "2025-03-07T15:04:27+07:00"
+lastmode = "2025-03-10T16:08:27+07:00"
 author = "trviph"
 tags = ["database"]
 keywords = ["database"]
@@ -102,9 +102,123 @@ của dữ liệu, loại dữ liệu của từng trường, các khoá chính,
 
 ### I có nghĩa là Isolation
 
-`Isolation` là một đặc tính dùng để cô lập các transaction chạy song song với nhau.
+`Isolation` là một đặc tính dùng để cô lập các transaction chạy song song với nhau, mục tiêu chính của `isolation` là
+tránh data race xảy ra, khi có nhiều transaction cùng một lúc truy cập vào cùng một vùng dữ liệu (page, table, record).
+Isolation thường được thực hiện bằng cách khoá (bảng, record, index) cho các câu truy vấn dạng Data Manipulation
+Language (DML như INSERT, UPDATE, DELETE); khoá (bảng, record, index) hoặc tạo snapshot cho các câu truy vấn dạng Data
+Query Language (DQL như SELECT). Có bốn cấp độ isolation, lựa chọn cấp độ isolation cao sẽ giúp tránh được data race
+tuy nhiên đổi lại sẽ giảm hiệu năng của database:
+
+#### Read-committed
+
+{{< image src="/img/cap-acid-base/acid-read-committed-light.vi.svg" alt="" position="center" >}}
+
+Read-committed là mức isolation thứ hai, tuy nhiên được đề cập đầu tiên do theo tôi để hiểu các cấp độ khác cần phải
+hiểu về read-committed. Trong read-committed, các thay đổi trong một transaction sẽ không thấy được bởi các transaction
+khác, cho đến khi transaction được commit thành công.
+
+```sql
+-- Bắt đầu một transaction
+BEGIN;
+
+-- Thêm một record mới vào bảng 'example' của database 'acid'
+INSERT INTO 'acid'.'example'('id', 'name')
+VALUES 
+    -- Các transaction khác sẽ không thấy được record này trong bảng example của database acid
+    -- do transaction hiện tại chưa được commit thành công
+    (2, "Chuồn chuồn bay cao thì nắng, bay vừa thì râm");
+
+-- Commit transaction, nếu thành công các transaction khác sẽ thấy record ở trên được thêm bào bảng
+COMMIT;
+```
+
+#### Repeatable-read
+
+{{< image src="/img/cap-acid-base/acid-repeatable-read-light.vi.svg" alt="" position="center" >}}
+
+Repeatable-read là mức isolation thứ ba, không chỉ đảm bảo các đặc điểm của read-commited mà còn đảm bảo thêm rằng
+trong toàn bộ thời gian mà transaction tồn tại, các trường dữ liệu liên quan sẽ không bị thay đổi.
+
+```sql
+-- Bắt đầu một transaction
+BEGIN;
+
+-- Record này sẽ bị khoá, đảm bảo không bị transaction khác thay đổi
+-- cho đến khi transaction hiện tại được commit
+SELECT 'name' FROM 'acid'.'example' WHERE 'id' = 1;
+
+-- Các câu query khác
+-- ...
+
+-- Giá trị vẫn sẽ giữ nguyên không thay đổi
+SELECT 'name' FROM 'acid'.'example' WHERE 'id' = 1;
+
+-- Commit transaction, và thả các khoá
+COMMIT;
+```
+
+#### Serializable
+
+{{< image src="/img/cap-acid-base/acid-serializable-light.vi.svg" alt="" position="center" >}}
+
+Serializable là cấp độ isolation cao nhất, đảm bảo tất cả những đảm bảo của repeatable-read, thêm vào đó còn đảm bảo
+thêm rằng sẽ không record mới xuất hiện cho đến khi transaction hiện tại kết thúc.
+
+```sql
+-- Bắt đầu một transaction
+BEGIN;
+
+-- Lần query đầu tiên.
+SELECT 'name' FROM 'acid'.'example' WHERE 'id' < 9999;
+
+-- Các câu query khác
+-- ...
+
+-- Giá trị các record vẫn sẽ giữ nguyên không thay đổi
+-- và số lượng record không đổi
+SELECT 'name' FROM 'acid'.'example' WHERE 'id' < 9999;
+
+-- Commit transaction, và thả các khoá
+COMMIT;
+```
+
+#### Dirty-read
+
+Dirty-read là mức isolation thấp nhất, ở dirty read thì hoàn toàn không tồn tại sự cô lập giữa các transaction.
 
 ### D có nghĩa là Durability
+
+{{< image src="/img/cap-acid-base/acid-durable-light.vi.svg" alt="" position="center" >}}
+
+`Durability` là một đặc trưng tạo nên độ tin cậy của cơ sở dữ liệu, đặc trưng này đảm bảo rằng khi một transaction
+đã được commit thành công thì dữ liệu sẽ tồn tại vĩnh viễn, tất nhiên miễn là ổ cứng lưu trữ không bị hư hỏng. Điều
+này thường được thực hiện bằng kỹ thuật two-phase commit, backup, hay replicate. Như trong MySQL, với mỗi commit,
+database sẽ ghi dữ liệu vào binlog trước khi ghi dữ liệu vào page lưu trữ, nếu MySQL crash trong lúc viết vào page thì có thể đọc từ binlog để khôi phục lại dữ liệu. Ngoài ra binlog còn được dùng để sync dữ liệu giữa các replica.
+Tương tự trong MongoDB thì có oplog.
+
+## BASE!?
+
+BASE là một thuật ngữ thường được các cơ sở dữ liệu phân tán sử dụng. Các database được thiết
+kế theo BASE, tập trung vào tính `availability` của hệ thống bằng cách hy sinh tính `strong consistency`.
+Cả hai khái niệm về `availability` và `strong consistency` là các định nghĩa được sử dụng trong `CAP` đề cập bên trên.
+
+### BA có nghĩa là Basically Available
+
+Đảm bảo rằng hệ thống sẽ luôn luôn sẵn sàng, và tất cả mọi yêu đến hệ thống đều sẽ nhận được một phản hồi hợp lệ.
+
+### S có nghĩa là Soft-State
+
+Soft-State là đặc tính của database cho rằng state (trạng thái, dữ liệu) của database có thể thay đổi ngay cả khi không
+có input từ user. Đây được xem là một kết quả của tính `eventual consistency`, khi người dùng viết dữ liệu vào database,
+trạng thái của database sẽ không thay đổi ngay lập tức mà sẽ cần một khoảng thời gian để thay đổi có thể được truyền tải
+đến tất cả các node.
+
+### E có nghĩa là Eventual Consistency
+
+Eventual consistency đảm bảo sau một khoảng thời gian thì tất cả các node trong hệ thống đều sẽ được đồng bộ với nhau.
+Kết quả mang lại là trong tại cùng một thời điểm các node trong hệ thống có thể chứa các phiên bản dữ liệu khác nhau.
+Điều này khác với `strong consistency` đảm bảo tất cả các node trong hệ thống sẽ luôn luôn được đồng bộ ngay lập
+tức, tất cả các node có cùng một phiên bản dữ liệu.
 
 ## Đọc thêm
 
