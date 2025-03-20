@@ -8,11 +8,11 @@
   --menu-color: black;
 
   // Use in code syntax highlighting
-  --syntax-func-color: color-mix(in srgb, var(--accent) 70%, #000 30%);
-  --syntax-var-color: color-mix(in srgb, var(--accent) 90%, #000);
+  --syntax-func-color: #7A3E9D;
+  --syntax-var-color: #325CC0;
   --syntax-value-color: color-mix(in srgb, var(--accent), black);
-  --syntax-punctuation-color: black;
-  --syntax-comment-color: rgba(0, 0, 0, 0.3);
+  --syntax-punctuation-color: #777777;
+  --syntax-comment-color: #AA3731;
   --syntax-line-highlight-mix: color-mix(in srgb, var(--accent) 90%, #000 10%);
   --syntax-line-highlight-background-color: hsla(336, 20%, 50%, 0.4);
   --syntax-line-highlight-color: hsl(336, 20%, 95%);
