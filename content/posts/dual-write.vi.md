@@ -35,12 +35,6 @@ rằng dữ liệu mới đã được thêm hoặc dữ liệu cũ đã đượ
 dữ liệu cũ không được cập nhật hoặc không có dữ liệu mới dẫn đến dữ liệu bị mất đồng bộ giữa các hệ thống
 với nhau.
 
-There are multiple possible reasons for this failure to occur. Maybe there was a network partition
-happening at the time, causing the receiver of data to be unreachable, or the receiver simply having
-downtime due to errors or maintenance, or it was something as simple as human errors sending
-a wrong schema to a wrong API, etc. But whatever the cause, the data is now mismatched and we must
-somehow fix it.
-
 Có một vài nguyên do lý giải cho việc này xảy ra. Có thể trong lúc truyền tải dữ liệu đường truyền mạng
 có vấn đề, dẫn đến mất kết nối, hoặc có thể do máy chủ sau bị lỗi hay đang bảo trì nên không thể kết nối
 được, hoặc chỉ đơn giản do lỗi con người, truyền sai schema dữ liệu, gọi sai API, ... Cho dù lý do có là
