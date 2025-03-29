@@ -40,7 +40,7 @@ somehow fix it.
 
 ## Examples Of Dual Write In E-commerce
 
-In e-commerce systems, to easily scale out the overall systems and engineering teams. The architect is often
+In e-commerce systems, to easily scale out the overall systems and engineering teams. The architecture is often
 separated into several services with defined boundaries. Some of the most crucial services,
 you may find in these systems are a payment service/gateway to handle customer payments and the checkout
 process; an order management system to manage and track customer orders; an inventory management system
