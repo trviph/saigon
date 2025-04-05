@@ -2,6 +2,7 @@
 draft = true
 title = "CAP vs ACID vs BASE?!"
 date = "2025-03-07T15:04:27+07:00"
+lastmod = "2025-04-05T20:28:00+07:00"
 author = "trviph"
 tags = ["database"]
 keywords = ["database"]
@@ -37,7 +38,7 @@ Availability is also a highly desirable trait of a distributed system, every mod
 
 ### P stands for partition-tolerance
 
-A system is considered to be `partition-tolerance` when in case of a partition event (due to network slowdown, some nodes crashing, ...) the system must continue to operate as normal as if the partition has not occurred.
+A system is considered to be `partition-tolerance` when in case of a partition event (due to network slowdown, some nodes crashing, etc.) the system must continue to operate as normal as if the partition has not occurred.
 
 ### Why can we not choose all three?
 
@@ -59,35 +60,27 @@ This is an important property. Because, in reality, business transactions rarely
 
 `Consistency` in ACID is very different from `strong consistency` or `eventual consistency` in CAP or BASE. In ACID, consistency is a property of which the database always guarantees that every data in the database will be consistent with the predefined schema and constraints. These constraints include data type, primary key, unique key, foreign key, trigger, procedure, the number of columns, etc.
 
-### I có nghĩa là Isolation
+### I stands for Isolation
 
-`Isolation` là một đặc tính dùng để cô lập các transaction chạy song song với nhau, mục tiêu chính của `isolation` là
-tránh data race xảy ra, khi có nhiều transaction cùng một lúc truy cập vào cùng một vùng dữ liệu (page, table, record).
-Isolation thường được thực hiện bằng cách khoá (bảng, record, index) cho các câu truy vấn dạng Data Manipulation
-Language (DML như INSERT, UPDATE, DELETE); khoá (bảng, record, index) hoặc tạo snapshot cho các câu truy vấn dạng Data
-Query Language (DQL như SELECT). Có bốn cấp độ isolation, lựa chọn cấp độ isolation cao sẽ giúp tránh được data race
-tuy nhiên đổi lại sẽ giảm hiệu năng của database:
+`Isolation` is how the database isolates transactions from each other. This is a form of concurrency control. The purpose is to prevent data races from happening when there are multiple transactions running at the same time trying to modify the same data region (page, table, record, index, etc.). Isolation is usually done by locking data accessed by DML queries (such as INSERT, UPDATE, DELETE) or by creating a snapshot of data for DQL queries (such as SELECT). There are four main isolation levels, the higher the level the less likely for data races to happen but it comes with the cost of performance.
 
 #### Read-committed
 
 {{< image src="/img/cap-acid-base/acid-read-committed-light.en.svg" alt="" position="center" >}}
 
-Read-committed là mức isolation thứ hai, tuy nhiên được đề cập đầu tiên do theo tôi để hiểu các cấp độ khác cần phải
-hiểu về read-committed. Trong read-committed, các thay đổi trong một transaction sẽ không thấy được bởi các transaction
-khác, cho đến khi transaction được commit thành công.
+Read-committed is the second isolation level, but I feel that it is important to understand this first to understand the other isolation levels. In read-committed, every change in the current transaction will not be seen by other transactions until the current transaction is committed successfully. This ensures that you will always see committed data.
 
 ```sql
--- Bắt đầu một transaction
+-- Start a transaction
 BEGIN;
 
--- Thêm một record mới vào bảng 'example' của database 'acid'
+-- Insert a new record into 'example' table of 'acid' database
 INSERT INTO 'acid'.'example'('id', 'name')
 VALUES 
-    -- Các transaction khác sẽ không thấy được record này trong bảng example của database acid
-    -- do transaction hiện tại chưa được commit thành công
+    -- Other transactions can't see this record until this transaction is committed successfully
     (2, "Chuồn chuồn bay cao thì nắng, bay vừa thì râm");
 
--- Commit transaction, nếu thành công các transaction khác sẽ thấy record ở trên được thêm bào bảng
+-- Commit transaction
 COMMIT;
 ```
 
@@ -95,24 +88,22 @@ COMMIT;
 
 {{< image src="/img/cap-acid-base/acid-repeatable-read-light.en.svg" alt="" position="center" >}}
 
-Repeatable-read là mức isolation thứ ba, không chỉ đảm bảo các đặc điểm của read-commited mà còn đảm bảo thêm rằng
-trong toàn bộ thời gian mà transaction tồn tại, các trường dữ liệu liên quan sẽ không bị thay đổi.
+Repeatable read is the third isolation level, it guarantees read-committed and also guarantees that during the lifetime of the current transaction all the related records, which are used or seen by the current transaction will not be modified by other transactions.
 
 ```sql
--- Bắt đầu một transaction
+-- Start a transaction
 BEGIN;
 
--- Record này sẽ bị khoá, đảm bảo không bị transaction khác thay đổi
--- cho đến khi transaction hiện tại được commit
+-- This record is locked, other transactions can't modified it until this transaction is committed.
 SELECT 'name' FROM 'acid'.'example' WHERE 'id' = 1;
 
--- Các câu query khác
--- ...
+-- Other queries
+-- etc.
 
--- Giá trị vẫn sẽ giữ nguyên không thay đổi
+-- The result record is unchanged
 SELECT 'name' FROM 'acid'.'example' WHERE 'id' = 1;
 
--- Commit transaction, và thả các khoá
+-- Commit the transaction
 COMMIT;
 ```
 
@@ -120,40 +111,35 @@ COMMIT;
 
 {{< image src="/img/cap-acid-base/acid-serializable-light.en.svg" alt="" position="center" >}}
 
-Serializable là cấp độ isolation cao nhất, đảm bảo tất cả những đảm bảo của repeatable-read, thêm vào đó còn đảm bảo
-thêm rằng sẽ không record mới xuất hiện cho đến khi transaction hiện tại kết thúc.
+Serializable is the highest isolation level, in addition to repeatable-read, it also guarantees that during the current transaction lifetime, no other transactions will be able to add new records or remove records from the result sets used by the queries of the current transaction. In other words, serializable can prevent phantom read.
 
 ```sql
--- Bắt đầu một transaction
+-- Start a transaction
 BEGIN;
 
--- Lần query đầu tiên.
+-- First query, this will lock the table, other transactions
+-- will not be able to add or delete record if the id is less than 9999
 SELECT 'name' FROM 'acid'.'example' WHERE 'id' < 9999;
 
--- Các câu query khác
--- ...
+-- Other queries
+-- etc.
 
--- Giá trị các record vẫn sẽ giữ nguyên không thay đổi
--- và số lượng record không đổi
+-- The amount of result is not changed
 SELECT 'name' FROM 'acid'.'example' WHERE 'id' < 9999;
 
--- Commit transaction, và thả các khoá
+-- Commit transaction
 COMMIT;
 ```
 
 #### Dirty-read
 
-Dirty-read là mức isolation thấp nhất, ở dirty read thì hoàn toàn không tồn tại sự cô lập giữa các transaction.
+Dirty-read is the lowest level of isolation, at this level there is no isolation whatsoever.
 
-### D có nghĩa là Durability
+### D stands for Durability
 
 {{< image src="/img/cap-acid-base/acid-durable-light.en.svg" alt="" position="center" >}}
 
-`Durability` là một đặc trưng tạo nên độ tin cậy của cơ sở dữ liệu, đặc trưng này đảm bảo rằng khi một transaction
-đã được commit thành công thì dữ liệu sẽ tồn tại vĩnh viễn, tất nhiên miễn là ổ cứng lưu trữ không bị hư hỏng. Điều
-này thường được thực hiện bằng kỹ thuật two-phase commit, backup, hay replicate. Như trong MySQL, với mỗi commit,
-database sẽ ghi dữ liệu vào binlog trước khi ghi dữ liệu vào page lưu trữ, nếu MySQL crash trong lúc viết vào page thì có thể đọc từ binlog để khôi phục lại dữ liệu. Ngoài ra binlog còn được dùng để sync dữ liệu giữa các replica.
-Tương tự trong MongoDB thì có oplog.
+`Durability` is a property that tells how reliable a database is against faults. This property guarantees that if a transaction is committed successfully, the committed data will persist (of course, given that the hard drive is not damaged) even if the database crashes right after the commit. This guarantee is ensured by using techniques like two-phase commit, backup, or replication. In MySQL, with every commit the database will first write data to the binlog before writing data into pages on disk, this ensures that in case of failures, MySQL can still recover using the binlog. The binlog is also used to replicate data between multiple nodes. In MongoDB, similar to binlog exists oplog.
 
 ## BASE!?
 
