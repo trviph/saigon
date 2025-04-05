@@ -13,92 +13,51 @@ color = "paper"
 toc = true
 +++
 
+Have you ever studied or worked with databases and come across abbreviations such as ACID, BASE, CAP and wondered what these words mean? I have and this post is the result of my research on this topic.
 
-Khi tìm hiểu về database, chúng ta thường nghe đến các khái niệm như định lý CAP, tính chất ACID, tính chất BASE.
-Các khái niệm này là gì mà đi đâu ta cũng gặp phải? Hãy cùng tôi tìm hiểu trong bài này!
+## CAP is a type of headwear?
 
-## CAP nghĩa là cái nón?
+`CAP` stands for `Consistency, Availability, Partition-tolerance` first introduced by Eric Brewer in a talk in the year 2000. Brewer said that in a distributed system, in the event of a partition (of the network, or communication between nodes in the system), the said system can only choose between `consistency` or `availability` not both. What are these properties, and why can we not choose both?
 
-`CAP` là từ viết tắt của `Consitency, Availability, Partition-tolerance` được giới thiệu bởi Eric Brewer vào
-năm 2000 trong một buổi diễn thuyết. Brewer cho rằng, trong một hệ thống phân tán (distributed system) khi
-một sự kiện chia cách (network partition) xảy ra, hệ thống chỉ có thể lựa chọn giữa `consistency` hoặc `availability`. Vậy ba tính chất này là gì mà các hệ thống phân tán lại muốn có, và tại sao chúng không thể cùng lúc thoả mãn cả ba?
+### C stands for consistency
 
-### C có nghĩa là consistency
+In computer science, especially in the context of data, the word `consistency` is heavily overloaded. In all of the mentioned words ACID, CAP, BASE involve the word `consistency`. This often leads to misunderstanding of the meaning of the word. In CAP, a system is considered strongly consistent when at every point in time all the nodes in the system must hold a same, single version of data. This means that if you successfully write new data into one node, this newly written data must also exist on all other nodes. This differs from the eventual consistency mentioned in BASE, which allows for nodes in the system to have different versions of data, but will eventually converge at a single version.
 
-Trong ngành khoa học máy tính, đặc biệt trong ngữ cảnh về dữ liệu, từ `consistency` có thể nói bị quá tải
-về nghĩa. Khi nó được sử dụng trong quá nhiều định nghĩa (consistency đều có mặt trong CAP, ACID, BASE)
-nên thường dẫn đến nhầm lẫn. Trong định lý CAP, một hệ thống thoả được tính chất consistency khi tất cả
-mọi máy khách của hệ thống đều có cùng một phiên bản dữ liệu tại bất kỳ điểm thời gian nào.
-Nói cách khác, sau một hành động viết hoặc cập nhật dữ liệu vào hệ thống thì các hành động đọc tiếp theo đó
-đều phải cùng thấy được phiên bản dữ liệu mới nhất. `Consistency` theo định lý CAP còn thường được gọi
-là `strong consistency` khác với `eventual consistency` trong tính chất BASE.
-
-`Consistency` là một tính chất được nhiều người theo đuổi, do đây là một tính cất cần thiết trong các hệ thống
-mang tính chất giao dịch. Tưởng tượng trong hệ thống ngân hàng, bạn vừa gửi 1.000.000.000 tỷ VNĐ tại ngân
-hàng (whao!) nhưng khi tra cứu tài khoản lại không thấy khoản tiền đó! Một thảm hoạ!
+Consistency is one of the highly desirable properties of many systems. Imagine in banking, you go to the bank and deposit 1,000,000 USD (whoa!) but when checking your account, due to latency or temporary partition, the deposit is nowhere to be seen! What a disaster!
 
 {{< image src="/img/cap-acid-base/cap-inconsistent-light.en.svg" alt="" position="center" >}}
 
-### A có nghĩa là availability
+### A stands for availability
 
-Theo như Seth Gilbert và Nancy Lynch, một hệ thống phân tán thoả được tính chất `availability` khi tất cả
-mọi yêu cầu đến một node đang hoạt động trong hệ thống đều phải được nhận lại được phản hồi hợp lệ.
-Nói cách khác hệ thống phải có uptime là 100%, miễn là kết nối mạng vẫn còn hoạt động được thì
-người dùng phải sử dụng được hệ thống.
+According to Seth Gilbert and Nacy Lynch, a distributed system is considered `highly available` only when every request to a non-failing node must have a valid response. In layman's terms, the system must have an uptime of 100% to be considered highly available.
 
-Định nghĩa trên về `availability` là không thực tiễn, do các hệ thống hiện nay đều có downtime
-ví dụ như đa phần sản phẩm của Google Cloud có SLA về uptime là 99,99% (mỗi năm sẽ có khoảng 52 phút
-9,8 giây downtime) sẽ không thoả mãn được yêu cầu này. Nhưng tôi cảm thấy nó dễ hiểu hơn so với định
-nghĩa ban đầu của Brewer rằng: "data is considered highly available if a given consumer of the data
-can always reach some replica", tạm dịch: "Dữ liệu có tính sẵn sàng cao khi bất cứ một yêu cầu nào về dữ liệu
-phải luôn luôn có được một bản sao nhất định của dữ liệu đó".
+However, the above definition is not realistic in real life. Many systems like products of Google Cloud have an SLA of 99.99% uptime (convert to around 52 minutes of downtime every year) while not satisfying the above definition but are still considered highly available. But I found it is easier to understand than the following definition provided by Brewer: "Data is considered highly available if a given consumer of the data can always reach some replica".
 
-`Availability` là một tính chất được nhiều người chú trọng, mọi hệ thống đều được kỳ vọng phải luôn sẵn
-sàng tại mọi thời điểm. Nếu hệ thống không hoạt động có thể dẫn đến nhiều hệ luỵ nghiêm trọng, trong e-commerce
-chúng ta có thể mất khách hàng, hay trong hệ thống bệnh viện có thể dẫn đến trì hoãn hoạt động của bệnh viện.
+Availability is also a highly desirable trait of a distributed system, every modern system is expected to be always ready at any time. It can be problematic if the system becomes unavailable, in e-commerce, we will lose customers, and orders to competitors, in healthcare it can cause chaos and delays in treating patients.
 
-### P có nghĩa là partition-tolerance
+### P stands for partition-tolerance
 
-Một hệ thống gọi là `partition-tolerance` trong trường hợp nếu một phần của hệ thống đó
-bị chia cách (partition) do crash, mất kết nối mạng, ... thì các phần còn lại của hệ thống đó
-vẫn phải hoạt động như thường.
+A system is considered to be `partition-tolerance` when in case of a partition event (due to network slowdown, some nodes crashing, ...) the system must continue to operate as normal as if the partition has not occurred.
 
-### Tại sao không thể thoả mãn đồng thời CAP?
+### Why can we not choose all three?
 
-Trong một hệ thống có hai node A và B, nếu trong trường hợp có hiện tượng phân cách (partition) xảy ra.
-Node A sẽ không thể giao tiếp được với node B, nhưng vì hệ thống này thoả điều kiện `partition-tolerance`
-nên vẫn tiếp tục hoạt động, người dùng vẫn có thể tương tác với hệ thống điều này thoả `availability`.
-Tuy nhiên, khi dữ liệu được ghi vào A thì sẽ không tồn tại ở B, do hai node này không thể giao tiếp được
-với nhau, điều này không thoả được `consistency`. Như vậy hệ thống này chỉ thoả được AP.
+In a system that has two nodes A and B, if in the event of partition. The A Node won't be able to communicate with the B Node, but because this system is `partition-tolerance`, it will continue to operate. The users can still interact with the systems as normal, this satisfies `availability`. However, because the two nodes now operate in isolation (they can't communicate with each other), data written into A will not immediately exist in B and vice versa, this causes the system to be `inconsistent`. This system is an AP system.
 
-Trong một hệ thống khác tương tự như trên, vì muốn dữ liệu phải consistent giữa cả hai node. Nên khi node A phát hiện
-kết nối đến node B đã mất, nó sẽ cố kết nối lại khiến cho người dùng không thể tương tác được đến hệ thống làm mất đi
-tính `availability`. Tuy nhiên điều này cũng đảm bảo được rằng tại bất kỳ điểm thời gian nào, dữ liệu ở cả hai node là
-giống nhau. Như vậy hệ thống này chỉ thoả được CP.
+In another system with the same setup, when the two nodes found out that they could not communicate with each other, they stopped receiving all requests coming from the client and tried to reconnect with the other node. This ensures that the system always to be in a `consistent` state, but because the system can not be interacted with it is not considered to be `available`. This system is a CP system.
 
-## ACID là chất có tính ăn mòn?
+## ACID is a corrosive substance?
 
-ACID là một đặc trưng thường thấy trong các cơ sở dữ liệu quan hệ, được viết tắt từ
-`Atomicity, Consistency, Isolation, Durability`. Gần như bất cứ cơ sở dữ liệu nào cũng phải
-có được những đặc trưng này, và chúng cũng thường được dùng làm thước đo độ tin cậy của một
-cơ sở dữ liệu bất kỳ.
+ACID is a property often seen in relational databases, derived from `Atomicity, Consistency, Isolation, Durability`. Nearly every database is expected to have some form or another of this property, it is often used to indicate how reliable a database can be.
 
-### A có nghĩa là Atomicity
+### A stands for Atomicity
 
-`Atomicity` là đặc trưng của database về toán tử nhỏ nhất mà các database cần phải thực hiện không phải là một query
-(truy vấn) mà là một transaction (giao dịch). Một transaction là một tập hợp của một hoặc nhiều query. Một transaction
-chỉ thành công khi tất cả các query trong nó thành công.
+`Atomicity` is a property that states the smallest unit of work of a database is a transaction, not a query. A transaction can be composed of one or multiple queries. For a transaction to be considered successful, all of the queries in the transaction must also be successful.
 
-Điều này là rất quan trọng, vì trong thực tế, các giao dịch nghiệp vụ thường bao gồm một chuỗi các hành động.
-Vi dụ như giao dịch chuyển khoản ngân hàng, thì ngân hàng của bạn cần phải trừ tiền từ tài khoản của bạn và cộng tiền
-vào tài khoản mà bạn chuyển đến, và bất kỳ hành động nào bị thất bại thì toàn bộ giao dịch sẽ thất bại. Với `atomicity`,
-chúng ta có thể dễ dàng quản lý một transaction mà không cần quan tâm đến các state của dữ liệu trong từng query.
+This is an important property. Because, in reality, business transactions rarely ever consist of a single query, but are often composed of multiple. Take banking, for example, a transfer transaction often means a deduction of cash from the transferer account and an addition of cash to the receiver account, if any of these steps fail then the whole transfer is considered as failed. With `atomicity`, we are allowed to manage a transaction state without caring about manually handling the query states.
 
-### C có nghĩa là Consistency
+### C stands for Consistency
 
-`Consistency` trong ACID là một khái niệm khác so với `consistency` trong CAP hay BASE, nó mang ý nghĩa tất cả dữ liệu
-trong database sẽ luôn luôn tuân thủ theo các constraint/schema được định nghĩa. Các constraint này bao gồm số trường
-của dữ liệu, loại dữ liệu của từng trường, các khoá chính, khoá ngoại, khoá đặc biệt khác, trigger, ...
+`Consistency` in ACID is very different from `strong consistency` or `eventual consistency` in CAP or BASE. In ACID, consistency is a property of which the database always guarantees that every data in the database will be consistent with the predefined schema and constraints. These constraints include data type, primary key, unique key, foreign key, trigger, procedure, the number of columns, etc.
 
 ### I có nghĩa là Isolation
 

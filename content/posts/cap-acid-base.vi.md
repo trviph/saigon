@@ -19,7 +19,7 @@ Các khái niệm này là gì mà đi đâu ta cũng gặp phải? Hãy cùng t
 
 ## CAP nghĩa là cái nón?
 
-`CAP` là từ viết tắt của `Consitency, Availability, Partition-tolerance` được giới thiệu bởi Eric Brewer vào
+`CAP` là từ viết tắt của `Consistency, Availability, Partition-tolerance` được giới thiệu bởi Eric Brewer vào
 năm 2000 trong một buổi diễn thuyết. Brewer cho rằng, trong một hệ thống phân tán (distributed system) khi
 một sự kiện chia cách (network partition) xảy ra, hệ thống chỉ có thể lựa chọn giữa `consistency` hoặc `availability`. Vậy ba tính chất này là gì mà các hệ thống phân tán lại muốn có, và tại sao chúng không thể cùng lúc thoả mãn cả ba?
 
