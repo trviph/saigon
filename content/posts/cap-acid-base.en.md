@@ -143,27 +143,19 @@ Dirty-read is the lowest level of isolation, at this level there is no isolation
 
 ## BASE!?
 
-BASE là một thuật ngữ thường được các cơ sở dữ liệu phân tán sử dụng. Các database được thiết
-kế theo BASE, tập trung vào tính `availability` của hệ thống bằng cách hy sinh tính `strong consistency`.
-Cả hai khái niệm về `availability` và `strong consistency` là các định nghĩa được sử dụng trong `CAP` đề cập bên trên.
+BASE is often found in distributed databases. BASE emphasizes a strong focus on the `availability` of the system instead of focusing on `strong consistency`, sacrifices it, and instead settles for `eventual consistency`.
 
-### BA có nghĩa là Basically Available
+### BA stands for Basically Available
 
-Đảm bảo rằng hệ thống sẽ luôn luôn sẵn sàng, và tất cả mọi yêu đến hệ thống đều sẽ nhận được một phản hồi hợp lệ.
+Guarantees that the system is always available, and every request to the system always receives a valid response.
 
-### S có nghĩa là Soft-State
+### S stands for Soft-State
 
-Soft-State là đặc tính của database cho rằng state (trạng thái, dữ liệu) của database có thể thay đổi ngay cả khi không
-có input từ user. Đây được xem là một kết quả của tính `eventual consistency`, khi người dùng viết dữ liệu vào database,
-trạng thái của database sẽ không thay đổi ngay lập tức mà sẽ cần một khoảng thời gian để thay đổi có thể được truyền tải
-đến tất cả các node.
+Soft-State is a property that says a system state will change even without interaction from the users. This can be seen as the result of eventual consistency, when the user writes data into the database, the state does not change immediately but takes some time to propagate and converge.
 
-### E có nghĩa là Eventual Consistency
+### E stands for Eventual Consistency
 
-Eventual consistency đảm bảo sau một khoảng thời gian thì tất cả các node trong hệ thống đều sẽ được đồng bộ với nhau.
-Kết quả mang lại là trong tại cùng một thời điểm các node trong hệ thống có thể chứa các phiên bản dữ liệu khác nhau.
-Điều này khác với `strong consistency` đảm bảo tất cả các node trong hệ thống sẽ luôn luôn được đồng bộ ngay lập
-tức, tất cả các node có cùng một phiên bản dữ liệu.
+Unlike strong consistency, eventual consistency states that the data will not be immediately be consistent between nodes, but given enough time all nodes will converge and consistent with a single version of the data.
 
 ## Read More
 
