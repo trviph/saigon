@@ -8,6 +8,7 @@ hideComments = true
 +++
 
 - [Interpretable Machine Learning](https://christophm.github.io/interpretable-ml-book/) - Christoph Molnar
+- [Novelty and Outlier Detection](https://scikit-learn.org/stable/modules/outlier_detection.html) - Scikit Learn
 - [What Color is Your Function?](https://journal.stuffwithstuff.com/2015/02/01/what-color-is-your-function/) - Robert Nystrom
 - [Adaptive and responsive design in Flutter](https://docs.flutter.dev/ui/adaptive-responsive) - Flutter
 - [Design Patterns](https://refactoring.guru/) - Refactoring.Guru
