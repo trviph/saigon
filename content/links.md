@@ -25,3 +25,4 @@ hideComments = true
 - [Go Concurrency Patterns: Pipelines and cancellation](https://go.dev/blog/pipelines) - Sameer Ajmani
 - [Distributed Locks with Redis](https://redis.io/docs/latest/develop/use/patterns/distributed-locks/) - Redis
 - [The Grug Brained Developer](https://grugbrain.dev/) - grug brain developer
+- [A Guide to the Go Garbage Collector](https://tip.golang.org/doc/gc-guide) - Go
