@@ -26,3 +26,4 @@ hideComments = true
 - [Distributed Locks with Redis](https://redis.io/docs/latest/develop/use/patterns/distributed-locks/) - Redis
 - [The Grug Brained Developer](https://grugbrain.dev/) - grug brain developer
 - [A Guide to the Go Garbage Collector](https://tip.golang.org/doc/gc-guide) - Go
+- [A Simple Guide to Five Normal Forms in Relational Database Theory](https://www.bkent.net/Doc/simple5.htm) - William Kent
