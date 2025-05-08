@@ -1,5 +1,5 @@
 baseURL = 'https://www.vinhphuoc.dev/'
-defaultContentLanguage = 'vi'
+defaultContentLanguage = 'en'
 defaultContentLanguageInSubdir = false
 theme = 're-terminal'
 
@@ -46,23 +46,23 @@ madeByLabel = 'được tạo bởi'
 
 [languages.vi.params.logo]
 logoText = 'trviph'
-logoHomeLink = '/'
+logoHomeLink = '/vi'
 
 [languages.vi.menu]
 [[languages.vi.menu.main]]
 identifier = "posts"
 name = "Bài Đăng"
-url = "/posts"
+url = "/vi/posts"
 weight = 0
 [[languages.vi.menu.main]]
 identifier = "about"
 name = "Thông Tin"
-url = "/about"
+url = "/vi/about"
 weight = 1
 [[languages.vi.menu.main]]
-identifier = "links"
-name = "Links"
-url = "/links"
+identifier = "bookmarks"
+name = "Dấu Trang"
+url = "/vi/bookmarks"
 weight = 10
 
 
@@ -105,7 +105,7 @@ name = "About"
 url = "/en/about"
 weight = 1
 [[languages.en.menu.main]]
-identifier = "links"
-name = "Links"
-url = "/links"
+identifier = "bookmarks"
+name = "Bookmarks"
+url = "/en/bookmarks"
 weight = 10
