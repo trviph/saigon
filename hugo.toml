@@ -6,13 +6,9 @@ theme = 're-terminal'
 [params]
 themeColor = 'paper'
 centerTheme = true
-
 owner = 'trviph'
-
 showLanguageSelector = true
-
-showMenuItems = 2
-
+showMenuItems = 3
 showLastUpdated = true
 readingTime = true
 

@@ -1,5 +1,6 @@
 +++
 date = '2025-04-11T15:15:00+07:00'
+lastmod = '2025-05-08T15:15:12+07:00'
 title = 'Bookmarks'
 author = 'trviph'
 showFullContent = true
