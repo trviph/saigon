@@ -175,4 +175,4 @@ With the above examples, we may be tempted to think that JSON is evil. But it wa
 
 ### Criticism
 
-Although it helps prevent inconsistency and design of complex data models, 1NF is not without criticism; as mentioned, sometimes it is more performant to embed data directly than to create data references, which 1NF implicitly encourages; in fact, a lots of NoSQL databases actually encourages embedding over referencing, MongoDB is an example.  The first normal form also isn't friendly to use with tree-like data structures, often requires complex joins or multiple queries round-trip, and joins on the application level.
+Although it helps prevent inconsistency and design of complex data models, 1NF is not without criticism; as mentioned, sometimes it is more performant to embed data directly than to create data references, which 1NF implicitly encourages; in fact, a lots of NoSQL databases actually encourages embedding over referencing, MongoDB is an example. The first normal form also isn't friendly to use with tree-like data structures, often requires complex joins or multiple queries round-trip, and joins on the application level.
