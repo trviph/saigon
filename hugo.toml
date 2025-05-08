@@ -1,6 +1,6 @@
 baseURL = 'https://www.vinhphuoc.dev/'
 defaultContentLanguage = 'en'
-defaultContentLanguageInSubdir = false
+defaultContentLanguageInSubdir = true
 theme = 're-terminal'
 
 [params]
@@ -19,6 +19,7 @@ pagerSize = 5
 [languages]
 [languages.vi]
 languageCode = 'vi'
+contentDir = 'content/vi'
 languageDirection = 'ltr'
 languageName = 'Tiếng Việt'
 title = 'Trần Vĩnh Phước'
@@ -64,6 +65,7 @@ weight = 10
 
 [languages.en]
 languageCode = 'en'
+contentDir = 'content/en'
 languageDirection = 'ltr'
 languageName = 'English'
 title = 'Vinh-Phuoc Tran'
