@@ -72,14 +72,14 @@ A pessimist (as in the pessimist school of thought, not your typical pessimist) 
 
 An interesting and unique way of handling computer memory.
 
-**[Go Concurrency Patterns](https://go.dev/talks/2012/concurrency.slide) - Rob Pike**
+**[Go Concurrency Patterns](https://go.dev/talks/2012/concurrency.slide) - Rob Pike**  
 **[Go Concurrency Patterns: Pipelines and cancellation](https://go.dev/blog/pipelines) - Sameer Ajmani**
 
 Introduction to some Go concurrency patterns, so that you don't have to write atrocious concurrency code (like me)!
 
 **[Distributed Locks with Redis](https://redis.io/docs/latest/develop/use/patterns/distributed-locks/) - Redis**
 
-Managing locks on multiple threads of a single thread is already hard! Managing them from multiple processes, machines, etc? Even harder! Here is one way to do it sanely.
+Managing locks on multiple threads of a single process is already hard! Managing them from multiple processes, machines, etc? Even harder! Here is one way to do it sanely.
 
 **[The Grug Brained Developer](https://grugbrain.dev/) - grug brain developer**
 
