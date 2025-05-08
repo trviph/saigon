@@ -26,7 +26,7 @@ Found this while working on my bachelor's thesis, thanks to our professor, the t
 
 **[What Color is Your Function?](https://journal.stuffwithstuff.com/2015/02/01/what-color-is-your-function/) - Robert Nystrom**
 
-In my university days, I was extremely frustrated about using async while working with Google Firebase for my Android classes. So I go onto the internet to find the echo chamber that validates my frustrated view! And hey! I found this! Good read.
+In my university days, I was extremely frustrated about using async while working with Google Firebase for my Android classes. So I go onto the internet to find the echo chamber that validates my frustration! And hey! I found this! Good read.
 
 **[Adaptive and responsive design in Flutter](https://docs.flutter.dev/ui/adaptive-responsive) - Flutter**
 

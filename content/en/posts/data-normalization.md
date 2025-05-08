@@ -38,7 +38,7 @@ Now we will dive into the foundation of the normal forms, the first normal form 
 ------------------------------------------------
 ```
 
-A repeating group refers to a column within a table that contains a set, list, or array of values. The column can be in any format, as long as it is interpreted as a list, then it is a repeating group. The example table above has a repeating group, which is `phone_numbers`, containing a comma-separated value of multiple phone numbers. This format is fine as long as we don't run any queries on it, but that is often not the case. Eventually, we would want to run a query to check, say, how many phone numbers started with `(+01)` or to check if a particular phone number is already taken, or in case the phone number is allowed to be shared between multiple users (accounts), the same piece of information has to be stored multiple time, making it redundant, taking up more spaces. Then, how can we improve this? Let's see the table below.
+A repeating group refers to a column within a table that contains a set, list, or array of values. The column can be in any format, as long as it is interpreted as a list, then it is a repeating group. The example table above has a repeating group, which is `phone_numbers`, containing a comma-separated value of multiple phone numbers. This format is fine as long as we don't run any queries on it, but that is often not the case. Eventually, we would want to run a query to check, say, how many phone numbers started with `(+01)` or to check if a particular phone number is already taken, or in case the phone number is allowed to be shared between multiple users (accounts), the same piece of information has to be stored multiple times, making it redundant, taking up more spaces. Then, how can we improve this? Let's see the table below.
 
 ```text
 -------------------------
@@ -81,7 +81,7 @@ The example had two columns named `phone_number_1` and `phone_number_2`, represe
 
 ```text
 -------------------------------------------------
-| user_id | name     | chilren                  |
+| user_id | name     | children                  |
 -------------------------------------------------
 |         |          |                          |
 |         |          |  ----------------------  |
@@ -107,7 +107,7 @@ Another example of a multiple-value column is using another table or a subset of
 
 ```text
 ------------------------------------------------------
-| user_id | name     | chilren                       |
+| user_id | name     | children                       |
 ------------------------------------------------------
 |       1 | John Doe | {"id": 3, "name": "Doe Doe" } |
 |       2 | Jane Doe | {"id": 3, "name": "Doe Doe" } |
@@ -134,7 +134,7 @@ Storing data like above violates the 1NF because it causes the data to be redund
 ----------------------
 ```
 
-We now have a new table representing the relationship between entities. Now, every time `Doe Doe` data changes, we don't have to worry about updating the same data for `John Doe` or `Jane Doe`. Moreover, we can now easily add new relationships without the need for complex string matching and/or parsing. We can also model a more fine-grained table like below (note that more fine-grained != better).
+We now have a new table representing the relationship between entities. Now, every time `Doe Doe` data changes, we don't have to worry about updating the same data for `John Doe` or `Jane Doe`. Moreover, we can now easily query or modify relationships without the need for complex string matching and/or parsing. We can also model a more fine-grained table like below (note that more fine-grained != better).
 
 ```text
 ----------------------
@@ -159,7 +159,7 @@ That being said, having JSON columns like mentioned above violates the 1NF. It i
 
 ### Number of attributes is not fixed
 
-With JSON, there is another way to violate the 1NF. Tables that have an unfixed number of properties. With the example below, can we say that `John Doe` has three properties just like `Jane Doe` and `Doe Doe`, which are `user_id`, `name`, and `misc_info`? Or is it `John Doe` that has three properties: `user_id`, `name`, and `date_of_birth`? `Jane Doe` has four properties: `user_id`, `name`, `date_of_birth`, and `hobbies`. In a former case, we treat the `misc_info` as a single atomic value, so there is no violation of 1NF. But in the latter case, it is a clear violation, making the table much more complex to query and manage, and prone to data discrepancies.
+With JSON, there is another way to violate the 1NF: tables with a variable number of properties.
 
 ```text
 --------------------------------------------------------------------------------------
@@ -171,8 +171,27 @@ With JSON, there is another way to violate the 1NF. Tables that have an unfixed 
 --------------------------------------------------------------------------------------
 ```
 
-With the above examples, we may be tempted to think that JSON is evil. But it was also explained that it totally depends on how we use it. If we use a JSON column as an atomic value, then it is generally fine, but if we start to treat each key/value pair within the JSON as an independent property (e.g., treating `date_of_birth` inside `misc_info` as if it were a regular `date_of_birth` column for the user), it may cause long-term issues down the road as the data model evolves and becomes more complex as the system grows.
+With the above example, can we say that `John Doe` has three properties just like `Jane Doe` and `Doe Doe`, which are `user_id`, `name`, and `misc_info`? Or is it `John Doe` that has three properties: `user_id`, `name`, and `date_of_birth` while `Jane Doe` has four properties: `user_id`, `name`, `date_of_birth`, and `hobbies`? In the former case, we treat the `misc_info` as a single atomic value, so there is no violation of 1NF. But in the latter case, it is a clear violation, making the table much more complex to query and manage, and prone to data discrepancies.
 
-### Criticism
+With all that being said, we may be tempted to think that JSON is evil. But it was also explained that it totally depends on how we use it. If we use a JSON column as an atomic value, then it is generally fine, but if we start to treat each key/value pair within the JSON as an independent property (e.g., treating `date_of_birth` inside `misc_info` as if it were a regular `date_of_birth` column for the user), it may cause long-term issues down the road as the data model evolves and becomes more complex as the system grows.
 
-Although it helps prevent inconsistency and design of complex data models, 1NF is not without criticism; as mentioned, sometimes it is more performant to embed data directly than to create data references, which 1NF implicitly encourages; in fact, some NoSQL databases actually encourages embedding over referencing, MongoDB is an example. The first normal form also isn't friendly to use with tree-like data structures, often requires complex joins or multiple queries round-trip, and joins on the application level.
+### The upside
+
+The whole deal of 1NF is to help us produce a simpler data model that is easy to understand, query, manage, and extend. By enforcing atomicity on column values and eliminating repeating groups, leading to better data consistency and much less data duplication.
+
+### The downside
+
+Although it helps prevent inconsistency and simplify data model design, 1NF is not without flaws. As we mentioned, sometimes it is more performant to embed data directly than to create data references, which 1NF implicitly encourages. In fact, some NoSQL databases actually encourage embedding over referencing, MongoDB is one such example. The first normal form also isn't friendly to use with tree-like data structures, often requires complex joins or multiple queries to the database, and joins on the application level.
+
+## References
+
+- E. F. Codd, "A relational model of data for large shared data banks", [dl.acm.org](https://dl.acm.org/doi/10.1145/362384.362685)
+- E. F. Codd, "Normalized data base structure: a brief tutorial", [dl.acm.org](https://dl.acm.org/doi/10.1145/1734714.1734716)
+- Ronald Fagin, "Multivalued dependencies and a new normal form for relational databases", [dl.acm.org](https://dl.acm.org/doi/10.1145/320557.320571)
+- William Kent, "A Simple Guide to Five Normal Forms in Relational Database Theory", [www.bkent.net](https://www.bkent.net/Doc/simple5.htm)
+- Wikipedia, "First Normal Form", [en.wikipedia.com](https://en.wikipedia.org/wiki/First_normal_form)
+- Wikipedia, "Second Normal Form", [en.wikipedia.com](https://en.wikipedia.org/wiki/Second_normal_form)
+- Wikipedia, "Third Normal Form", [en.wikipedia.com](https://en.wikipedia.org/wiki/Third_normal_form)
+- Wikipedia, "Fourth Normal Form", [en.wikipedia.com](https://en.wikipedia.org/wiki/Fourth_normal_form)
+- MongoDB, "Embedding MongoDB", [www.mongodb.com](https://www.mongodb.com/resources/products/fundamentals/embedded-mongodb)
+- Cassandra, "Data Modeling", [cassandra.apache.org](https://cassandra.apache.org/doc/latest/cassandra/developing/data-modeling/index.html)
