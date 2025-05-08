@@ -22,7 +22,7 @@ Instead, we will be discussing the next layer, how to translate these abstracted
 
 ## First normal form
 
-Now we will dive into the foundation of the normal forms, the first normal form (1NF). The first normal form is satisfied only when no column within the table contains multiple values. More formally, all the columns must only contain a single atomic value. There must not exist any more meaningful facts about the data by taking a subset of the column. There are several types of non-atomic columns:
+Now we will dive into the foundation of the normal forms, the first normal form (1NF). The first normal form is satisfied only when no column within the table contains multiple values. More formally, all the columns must only contain a single atomic value. There must not exist any more meaningful facts about the data by taking a subset of a single column. There are several types of non-atomic columns:
 
 ### Repeating group
 
@@ -61,7 +61,7 @@ A repeating group refers to a column within a table that contains a set, list, o
 ----------------------------
 ```
 
-We have now split the `phone_numbers` column into a separate table. The two tables are connected by the `user_id`, which helps reduce data redundancy and satisfies the 1NF. Originally, the 1NF refers to repeating groups as columns that hold an array as their value, but it often includes cases where there is a group of columns that represent the same attribute, like the example below.
+We have now split the `phone_numbers` column into a separate table. The two tables are connected by the `user_id`, which helps reduce data redundancy and satisfies the 1NF. Originally, the 1NF refers to repeating groups as columns that hold an array as their value, but it also can include cases where there is a group of columns that represent the same attribute, like the example below.
 
 ```text
 -----------------------------------------------------------
@@ -134,7 +134,7 @@ Storing data like above violates the 1NF because it causes the data to be redund
 ----------------------
 ```
 
-We now have a new table representing the relationship between entities. Now, every time `Doe Doe` data changes, we don't have to worry about updating the same data for `John Doe` or `Jane Doe`. Moreover, we can now easily add new relationships without the need for complex string matching and/or parsing. We can also model a more fine-grained table like below (note more fine-grained != better).
+We now have a new table representing the relationship between entities. Now, every time `Doe Doe` data changes, we don't have to worry about updating the same data for `John Doe` or `Jane Doe`. Moreover, we can now easily add new relationships without the need for complex string matching and/or parsing. We can also model a more fine-grained table like below (note that more fine-grained != better).
 
 ```text
 ----------------------
@@ -175,4 +175,4 @@ With the above examples, we may be tempted to think that JSON is evil. But it wa
 
 ### Criticism
 
-Although it helps prevent inconsistency and design of complex data models, 1NF is not without criticism; as mentioned, sometimes it is more performant to embed data directly than to create data references, which 1NF implicitly encourages; in fact, a lots of NoSQL databases actually encourages embedding over referencing, MongoDB is an example. The first normal form also isn't friendly to use with tree-like data structures, often requires complex joins or multiple queries round-trip, and joins on the application level.
+Although it helps prevent inconsistency and design of complex data models, 1NF is not without criticism; as mentioned, sometimes it is more performant to embed data directly than to create data references, which 1NF implicitly encourages; in fact, some NoSQL databases actually encourages embedding over referencing, MongoDB is an example. The first normal form also isn't friendly to use with tree-like data structures, often requires complex joins or multiple queries round-trip, and joins on the application level.
