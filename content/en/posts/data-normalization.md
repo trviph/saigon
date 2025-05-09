@@ -12,19 +12,15 @@ hideComments = false
 toc = true
 +++
 
-Abstraction has always been a core concept in software engineering, not only relevant as an OOP principle but in the entire industry. It is hard to do abstraction well; we all have to deal with or make terrible abstractions, think about all those pyramids of inheritance or the demon web of "microlith" services. Abstraction is a broad topic. Abstract what, exactly? Is it code, system, hardware, or something else entirely?
-
-We will be discussing data abstraction, commonly known as data modeling. As software engineers, we often have to translate fuzzy, real-world concepts into some kind of structured information (classes, attributes, methods, variables, functions) that can be understood and processed by the software. Think about representing a "person", depending on the context, they might become a "user", an "employee", a "seller", or something else entirely, each with different properties. This is the first layer of data modeling, extracting a discrete set of attributes from the real-world representation. We also won't be discussing this layer here, because it is too broad and often depends heavily on the problem we try to solve, and the domain knowledge we possess.
-
-> However, if you are interested, check out "Data and Reality" by William Kent. The book touches upon this level of data modeling and is very interesting to read.
-
-Instead, we will be discussing the next layer, how to translate these abstracted entities into a data format to be easily stored, managed, and understood, specifically into SQL tables, by exploring the famous Normal Forms.
+As software engineers, we deal with data abstraction everyday. Trying to make sense of real-world concepts and abstract them into structured information such as variables, functions, classes, structs, etc. that can be processed by software. Working with data almost always involve storing them into some sort of data storage, one such type of storage is relational databases, often called SQL databases. In this post we will take a ride through the normal forms, from the first to fourth, of relational database to learn what they are, why they are good, and why they can be bad.
 
 ## First normal form
 
 Now we will dive into the foundation of the normal forms, the first normal form (1NF). The first normal form is satisfied only when no column within the table contains multiple values. More formally, all the columns must only contain a single atomic value. There must not exist any more meaningful facts about the data by taking a subset of a single column. There are several types of non-atomic columns:
 
 ### Repeating group
+
+A repeating group refers to a column within a table that contains a set, list, or array of values. The column can be in any format, as long as it is interpreted as a list, then it is a repeating group. The example below contains a repeating group, i.e. non-atomic column, a violation of the 1NF.
 
 ```text
 ------------------------------------------------
@@ -38,7 +34,9 @@ Now we will dive into the foundation of the normal forms, the first normal form 
 ------------------------------------------------
 ```
 
-A repeating group refers to a column within a table that contains a set, list, or array of values. The column can be in any format, as long as it is interpreted as a list, then it is a repeating group. The example table above has a repeating group, which is `phone_numbers`, containing a comma-separated value of multiple phone numbers. This format is fine as long as we don't run any queries on it, but that is often not the case. Eventually, we would want to run a query to check, say, how many phone numbers started with `(+01)` or to check if a particular phone number is already taken, or in case the phone number is allowed to be shared between multiple users (accounts), the same piece of information has to be stored multiple times, making it redundant, taking up more spaces. Then, how can we improve this? Let's see the table below.
+The `phone_numbers` contains a comma-separated value of multiple phone numbers. This format is fine as long as we don't run any queries on it, but that is often not the case. Eventually, we would want to run a query to check, say, how many phone numbers started with `(+01)` or to check if a particular phone number is already taken. Making such queries is non-trivial often involving string matching or parsing.
+
+In addition, this format can lead to data redundancy. For instance, if the phone number is allowed to be shared between multiple users (accounts), the same phone number has to be stored in multiple places, making it redundant, taking up more spaces. Then, how can we improve this? Let's see the table below.
 
 ```text
 -------------------------

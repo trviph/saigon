@@ -95,4 +95,4 @@ The ever-present question of how to effectively model real-world entities into d
 
 **[THE PROBLEMS OF PHILOSOPHY](https://gutenberg.org/cache/epub/5827/pg5827-images.html) - Bertrand Russell**
 
-An interesting read about reality, existence, nature, perception, etc. I personally found the third chapter, "THE NATURE OF MATTER", to be relevant to data modeling. Especially after reading "Data and Reality" by William Kent.
+An interesting read about reality, existence, nature, perception, etc.
