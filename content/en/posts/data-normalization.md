@@ -1,7 +1,8 @@
 +++
 draft = true
 title = "Data Modeling - Normalization"
-date = "2025-05-08T20:25:03+07:00"
+date = "2025-05-08T20:25:00+07:00"
+lastmod = "2025-05-09T22:28:00+07:00"
 author = "trviph"
 cover = ""
 tags = ["data-modeling", "data-consistency", "data-redundancy"]
