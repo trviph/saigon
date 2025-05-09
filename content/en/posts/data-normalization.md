@@ -16,7 +16,7 @@ Abstraction has always been a core concept in software engineering, not only rel
 
 We will be discussing data abstraction, commonly known as data modeling. As software engineers, we often have to translate fuzzy, real-world concepts into some kind of structured information (classes, attributes, methods, variables, functions) that can be understood and processed by the software. Think about representing a "person", depending on the context, they might become a "user", an "employee", a "seller", or something else entirely, each with different properties. This is the first layer of data modeling, extracting a discrete set of attributes from the real-world representation. We also won't be discussing this layer here, because it is too broad and often depends heavily on the problem we try to solve, and the domain knowledge we possess.
 
-> However, if you are interested, check out "Data and Reality" by William Kent. The book touches upon this level of data modeling and is very interesting to read. I am not affiliated by any means, just thought that it is a good read and should be shared.
+> However, if you are interested, check out "Data and Reality" by William Kent. The book touches upon this level of data modeling and is very interesting to read.
 
 Instead, we will be discussing the next layer, how to translate these abstracted entities into a data format to be easily stored, managed, and understood, specifically into SQL tables, by exploring the famous Normal Forms.
 
@@ -115,7 +115,7 @@ Another example of a multiple-value column is using another table or a subset of
 ------------------------------------------------------
 ```
 
-Storing data like above violates the 1NF because it causes the data to be redundant. When we need to update `Doe Doe` data, we would also need to update `Doe Doe` data for `John Doe` and `Jane Doe`. If not done carefully, it can cause inconsistencies in the data. To comply with the 1NF, we can re-model the table like the following example.
+Storing data like above violates the 1NF because `children` is a non-atomic column causing the data to be redundant. When we need to update `Doe Doe` data, we would also need to update `Doe Doe` data for `John Doe` and `Jane Doe`. If not done carefully, it can cause inconsistencies in the data. To comply with the 1NF, we can re-model the table like the following example.
 
 ```text
 ----------------------
@@ -155,7 +155,7 @@ We now have a new table representing the relationship between entities. Now, eve
 ---------------------------------------
 ```
 
-That being said, having JSON columns like mentioned above violates the 1NF. It is, however, not entirely a bad thing to do. In some use cases, it is preferable to sacrifice writing speed (create, update, delete) in exchange for reading speed (select, aggregate). This technique is embedding data, which stores a snapshot of any relevant data together with the main data to bypass joining or needing multiple queries. It is up to us to choose the appropriate tool for the job.
+That being said, having JSON columns like mentioned above violates the 1NF. It is, however, not entirely a bad thing to do. In some use cases, it is preferable to denormalize data in exchange for an improvement in reading speed. This technique is embedding data, which stores a snapshot of any relevant data together with the main data to bypass joining or needing multiple queries, but may introduce inconsistency due to stale snapshots. It is up to us to choose the appropriate tool for the job.
 
 ### Number of attributes is not fixed
 
@@ -181,7 +181,7 @@ The whole deal of 1NF is to help us produce a simpler data model that is easy to
 
 ### The downside
 
-Although it helps prevent inconsistency and simplify data model design, 1NF is not without flaws. As we mentioned, sometimes it is more performant to embed data directly than to create data references, which 1NF implicitly encourages. In fact, some NoSQL databases actually encourage embedding over referencing, MongoDB is one such example. The first normal form also isn't friendly to use with tree-like data structures, often requires complex joins or multiple queries to the database, and joins on the application level.
+Although it helps prevent inconsistency and simplify data model design, 1NF is not without flaws. As we mentioned, sometimes it is more performant to embed data directly than to create data references, which 1NF implicitly encourages. In fact, some NoSQL databases actually encourage embedding over referencing, MongoDB is one such example. The first normal form also isn't friendly to use with tree-like data structures, often requires complex self-joins together with implementation of techinques like path enumeration, nested set, adjacency list or multiple queries to the database, and joins on the application level.
 
 ## References
 
