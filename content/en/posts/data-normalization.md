@@ -12,7 +12,7 @@ hideComments = false
 toc = true
 +++
 
-As software engineers, we deal with data abstraction everyday. Trying to make sense of real-world concepts and abstract them into structured information such as variables, functions, classes, structs, etc. that can be processed by software. Working with data almost always involve storing them into some sort of data storage, one such type of storage is relational databases, often called SQL databases. In this post we will take a ride through the normal forms, from the first to fourth, of relational database to learn what they are, why they are good, and why they can be bad.
+As software engineers, we deal with data abstraction everyday. Trying to make sense of fuzzy real-world concepts and abstract them into structured information such as variables, functions, classes, structs, etc. that can be processed by software. Working with data almost always involve storing them into some sort of data storage, one such type of storage is relational databases, often called SQL databases. In this post we will take a ride through the normal forms, from the first to fourth, of relational database to learn what they are, why they are good, and why they can be bad.
 
 ## First normal form
 
@@ -180,6 +180,59 @@ The whole deal of 1NF is to help us produce a simpler data model that is easy to
 ### The downside
 
 Although it helps prevent inconsistency and simplify data model design, 1NF is not without flaws. As we mentioned, sometimes it is more performant to embed data directly than to create data references, which 1NF implicitly encourages. In fact, some NoSQL databases actually encourage embedding over referencing, MongoDB is one such example. The first normal form also isn't friendly to use with tree-like data structures, often requires complex self-joins together with implementation of techinques like path enumeration, nested set, adjacency list or multiple queries to the database, and joins on the application level.
+
+## Functional dependency
+
+I found it hard going into the next normal forms without fully knowing what a functional dependency is. After all, it is the essence that the second and third normal forms are trying to reinforce. Let's see what it is all about.
+
+Formally, a property `A` is functionally dependent on a property `B` (`B` -> `A`), only when in any given point in time, there only exists a single mapping from `B` to `A`, meaning by knowing `B` we can always infer what `A` is.
+
+```text
+----------------------------------------------------------------
+| isbn   | author   | title                                    |
+----------------------------------------------------------------
+| 000001 | John Doe | John Doe's Introduction to Life          |
+| 000002 | John Doe | John Doe's Introduction to Life (Vol. 2) |
+| 000003 | Jane Doe | How to Laugh!                            |
+| 000004 | Jane Doe | The Memory.                              |
+----------------------------------------------------------------
+```
+
+In the above example, we can see, `title` is functionally dependent on `isbn` (`isbn` -> `title`) because given any `isbn` we can easily infer the `title`. Similarly, the `author` is also functionally dependent on `isbn` (`isbn` -> `author`). But `title` is **not** functionally dependent on `author`, why? Because given any `author`, we cannot uniquely identify a `title`. Say, by referring to `Jane Doe`, we can either get `How to Laugh!` or `The Memory` as the `title`. Naturally, we can say that `author` and `title` are functionally dependent on `isbn` or `isbn` -> [`author`, `title`], we can infer `author` and `title` by using the `isbn`.
+
+### Full functional dependency
+
+Formally, assume that a property `A` is already functionally dependent on a property (or set of properties) `B` (`B` -> `A`). For `A` to be **fully** functionally dependent on `B`, there must be no cases where `A` is also functionally dependent on a proper subset of `B`.
+
+In practice, full functional dependency is used in contexts where composite keys are present. For a property to be fully functionally dependent on the composite key, it must not provide any fact to any subset of the composite key.
+
+```text
+-----------------------------------------
+| isbn   | user_id | user_name | rating |
+-----------------------------------------
+| 000001 |   00002 | A. Readr  |      4 |
+| 000001 |   00001 | Avid R.   |      5 |
+| 000002 |   00002 | A. Readr  |      3 |
+-----------------------------------------
+```
+
+Let's look at the above example, assume that `isbn` and `user_id` are a composite key. We can say that `rating` is functionally dependent on `isbn` and `user_id` (`isbn`, `user_id` -> `rating`) because with any given combination of `isbn` and `user_id` we can only get one single value of `rating`. Moreover, `rating` is considered to be fully functionally dependent on `isbn` and `user_id`, because by using either `isbn` or `user_id` alone we will get multiple values of `rating`. A book with `isbn` of `000001` has two ratings of `4` and `5` by two different users, and the `user_id` of `00002` also gives two ratings of `4` and `3` to two different books.
+
+### Partial functional dependency
+
+Formally, assume that a property `A` is already functionally dependent on a property (or set of properties) `B` (`B` -> `A`). For `A` to be **partial** functionally dependent on `B`, it **must not** be fully functionally dependent on `B`.
+
+```text
+-----------------------------------------
+| isbn   | user_id | user_name | rating |
+-----------------------------------------
+| 000001 |   00002 | A. Readr  |      4 |
+| 000001 |   00001 | Avid R.   |      5 |
+| 000002 |   00002 | A. Readr  |      3 |
+-----------------------------------------
+```
+
+Still using the same example in [Full functional dependency](#full-functional-dependency) section, under the same assumption that `isbn` and `user_id` are a composite key, but now let's focus on `user_name` instead of `rating`. Just like with `rating`, we can say that `user_name` is functionally dependent on `isbn` and `user_id` (`isbn`, `user_id` -> `user_name`) because with any given combination of `isbn` and `user_id` we can only get one single value of `user_name`. But **unlike** `rating`, `user_name` **is not** fully functionally dependent on `isbn` and `user_id`. Because by using just `user_id`, a proper subset of `isbn` and `user_id` composite key, we can uniquely infer the `user_name`. In another word, `user_name` is also functionally dependent on `user_id`. This causes it to be partially functionally dependent on `isbn` and `user_id`.
 
 ## References
 
