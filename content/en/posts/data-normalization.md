@@ -1,19 +1,18 @@
 +++
-draft = true
-title = "Data Modeling - Normalization"
+title = "Data Normalization in Relational Databases"
 date = "2025-05-08T20:25:00+07:00"
 lastmod = "2025-05-09T22:28:00+07:00"
 author = "trviph"
 cover = ""
-tags = ["data-modeling", "data-consistency", "data-redundancy"]
-keywords = ["data-modeling", "data-consistency", "data-redundancy"]
+tags = ["data-normalization", "data-consistency", "data-redundancy"]
+keywords = ["data-normalization", "data-consistency", "data-redundancy"]
 showFullContent = false
 readingTime = true
 hideComments = false
 toc = true
 +++
 
-As software engineers, we deal with data abstraction everyday. Trying to make sense of fuzzy real-world concepts and abstract them into structured information such as variables, functions, classes, structs, etc. that can be processed by software. Working with data almost always involve storing them into some sort of data storage, one such type of storage is relational databases, often called SQL databases. In this post we will take a ride through the normal forms, from the first to fourth, of relational database to learn what they are, why they are good, and why they can be bad.
+As software engineers, we deal with data abstraction every day. Trying to make sense of fuzzy real-world concepts and abstract them into structured information such as variables, functions, classes, structs, etc. that can be processed by software. Working with data almost always involve storing them into some sort of data storage, one such type of storage is relational databases, often called SQL databases. In this post we will take a ride through the normal forms, from the first to fourth, of relational database to learn what they are, why they are good, and why they can be bad.
 
 ## First normal form
 
@@ -37,7 +36,7 @@ A repeating group refers to a column within a table that contains a set, list, o
 
 The `phone_numbers` contains a comma-separated value of multiple phone numbers. This format is fine as long as we don't run any queries on it, but that is often not the case. Eventually, we would want to run a query to check, say, how many phone numbers started with `(+01)` or to check if a particular phone number is already taken. Making such queries is non-trivial often involving string matching or parsing.
 
-In addition, this format can lead to data redundancy. For instance, if the phone number is allowed to be shared between multiple users (accounts), the same phone number has to be stored in multiple places, making it redundant, taking up more spaces. Then, how can we improve this? Let's see the table below.
+In addition, this format can lead to data redundancy. For instance, if the phone number is allowed to be shared between multiple users (accounts), the same phone number has to be stored in multiple places, making it redundant, taking up more spaces. Then, how can we normalize this? Let's see the table below.
 
 ```text
 -------------------------
@@ -176,11 +175,15 @@ With all that being said, we may be tempted to think that JSON is evil. But it w
 
 ### The upside
 
-The whole deal of 1NF is to help us produce a simpler data model that is easy to understand, query, manage, and extend. By enforcing atomicity on column values and eliminating repeating groups, leading to better data consistency and much less data duplication.
+The whole deal of 1NF is to eliminate repeating groups and multiple value columns. The examples have shown clearly (I hope you think so!) that using such a structure can lead to a conceptually complex data model, and complex queries later on in development. Also, 1NF helps with inconsistency issues by reducing data redundancy, fewer places we need to update for the same piece of data, a higher chance that the piece of data is consistent in the entire database (`Doe Doe` information is the same no matter which table we look at).
+
+This will be the point that will be repeated over and over again when talking about the benefits of the normal forms in this post. Because after all, the main reason for their existence is to do just that, improving data consistency by reducing data redundancy and data anomalies (insert anomalies, update anomalies, delete anomalies).
 
 ### The downside
 
-Although it helps prevent inconsistency and simplify data model design, 1NF is not without flaws. As we mentioned, sometimes it is more performant to embed data directly than to create data references, which 1NF implicitly encourages. In fact, some NoSQL databases actually encourage embedding over referencing, MongoDB is one such example. The first normal form also isn't friendly to use with tree-like data structures, often requires complex self-joins together with implementation of techinques like path enumeration, nested set, adjacency list or multiple queries to the database, and joins on the application level.
+Although it helps prevent inconsistency and simplify data model design, 1NF is not without flaws. As we mentioned, sometimes it is more performant to embed data directly than to create data references, which 1NF implicitly encourages. In fact, some NoSQL databases actually encourage embedding over referencing, MongoDB is one such example. The first normal form also isn't friendly to use with tree-like data structures, often requires complex self-joins together with implementation of techniques like path enumeration, nested set, adjacency list or multiple queries to the database, and joins on the application level.
+
+These criticisms, however, are not unique to 1NF but are applicable to the higher normal forms aswell. Because normal forms encourage splitting data into atomic tables whenever possible, making them often requires multiple JOINs, possible to slow down read queries. Moreover by using referential keys, it is complicated to scale (shard) the data into multiple physical locations while also ensuring the keys' integrity.
 
 ## Functional dependency
 
@@ -234,6 +237,8 @@ Formally, assume that a property `A` is already functionally dependent on a prop
 ```
 
 Still using the same example in [Full functional dependency](#full-functional-dependency) section, under the same assumption that `isbn` and `user_id` are a composite key, but now let's focus on `user_name` instead of `rating`. Just like with `rating`, we can say that `user_name` is functionally dependent on `isbn` and `user_id` (`isbn`, `user_id` -> `user_name`) because with any given combination of `isbn` and `user_id` we can only get one single value of `user_name`. But **unlike** `rating`, `user_name` **is not** fully functionally dependent on `isbn` and `user_id`. Because by using just `user_id`, a proper subset of `isbn` and `user_id` composite key, we can uniquely infer the `user_name`. In another word, `user_name` is also functionally dependent on `user_id`. This causes it to be partially functionally dependent on `isbn` and `user_id`.
+
+> To be continued.
 
 ## References
 
