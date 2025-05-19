@@ -3,7 +3,9 @@ date = '2025-04-11T15:15:00+07:00'
 lastmod = '2025-05-08T15:15:12+07:00'
 title = 'Bookmarks'
 author = 'trviph'
-showFullContent = true
+tags = ["resources", "bookmarks", "reading-list", "learning", "programming", "system-design", "database", "machine-learning", "philosophy"]
+keywords = ["technical resources", "programming bookmarks", "system design reading", "database resources", "machine learning links", "philosophy books online", "recommended reading", "developer resources", "curated links", "free online books"]
+showFullContent = false
 readingTime = true
 hideComments = true
 +++
