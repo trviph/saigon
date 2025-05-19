@@ -12,7 +12,7 @@ hideComments = false
 toc = true
 +++
 
-As software engineers, we deal with data abstraction every day. Trying to make sense of fuzzy real-world concepts and abstract them into structured information such as variables, functions, classes, structs, etc. that can be processed by software. Working with data almost always involve storing them into some sort of data storage, one such type of storage is relational databases, often called SQL databases. In this post we will take a ride through the normal forms, from the first to fourth, of relational database to learn what they are, why they are good, and why they can be bad.
+As software engineers, we deal with data abstraction every day. Trying to make sense of fuzzy real-world concepts and abstract them into structured information such as variables, functions, classes, structs, etc. that can be processed by software. Working with data almost always involves storing them into some sort of data storage, one such type of storage is relational databases, often called SQL databases. In this post we will take a ride through the normal forms, from the first to fourth, of relational database to learn what they are, why they are good, and why they can be bad.
 
 ## First normal form
 
@@ -23,6 +23,7 @@ Now we will dive into the foundation of the normal forms, the first normal form 
 A repeating group refers to a column within a table that contains a set, list, or array of values. The column can be in any format, as long as it is interpreted as a list, then it is a repeating group. The example below contains a repeating group, i.e. non-atomic column, a violation of the 1NF.
 
 ```text
+[user_information]
 ------------------------------------------------
 | user_id | phone_numbers        | signup_date |
 ------------------------------------------------
@@ -39,6 +40,7 @@ The `phone_numbers` contains a comma-separated value of multiple phone numbers. 
 In addition, this format can lead to data redundancy. For instance, if the phone number is allowed to be shared between multiple users (accounts), the same phone number has to be stored in multiple places, making it redundant, taking up more spaces. Then, how can we normalize this? Let's see the table below.
 
 ```text
+[user_information]
 -------------------------
 | user_id | signup_date |
 -------------------------
@@ -49,6 +51,7 @@ In addition, this format can lead to data redundancy. For instance, if the phone
 |       5 |  2025-04-21 |
 -------------------------
 
+[user_phone_numbers]
 ----------------------------
 | user_id | phone_number   |
 ----------------------------
@@ -62,6 +65,7 @@ In addition, this format can lead to data redundancy. For instance, if the phone
 We have now split the `phone_numbers` column into a separate table. The two tables are connected by the `user_id`, which helps reduce data redundancy and satisfies the 1NF. Originally, the 1NF refers to repeating groups as columns that hold an array as their value, but it also can include cases where there is a group of columns that represent the same attribute, like the example below.
 
 ```text
+[user_information]
 -----------------------------------------------------------
 | user_id | phone_number_1 | phone_number_2 | signup_date |
 -----------------------------------------------------------
@@ -78,6 +82,7 @@ The example had two columns named `phone_number_1` and `phone_number_2`, represe
 ### Table as an attribute
 
 ```text
+[user_information]
 -------------------------------------------------
 | user_id | name     | children                  |
 -------------------------------------------------
@@ -104,6 +109,7 @@ The example had two columns named `phone_number_1` and `phone_number_2`, represe
 Another example of a multiple-value column is using another table or a subset of a table as a column. Looking at the example above, you would be thinking that this is impossible, because most (if not all) relational databases disallow this kind of behavior. You would be right, the above example used to be impossible, but now with more and more relational databases allowing JSON as a type, it is conceptually possible to use a table as a column. Look at the example below, although in a different format, they represent the same meaning.
 
 ```text
+[user_information]
 ------------------------------------------------------
 | user_id | name     | children                       |
 ------------------------------------------------------
@@ -116,6 +122,7 @@ Another example of a multiple-value column is using another table or a subset of
 Storing data like above violates the 1NF because `children` is a non-atomic column causing the data to be redundant. When we need to update `Doe Doe` data, we would also need to update `Doe Doe` data for `John Doe` and `Jane Doe`. If not done carefully, it can cause inconsistencies in the data. To comply with the 1NF, we can re-model the table like the following example.
 
 ```text
+[user_information]
 ----------------------
 | user_id | name     |
 ----------------------
@@ -124,6 +131,7 @@ Storing data like above violates the 1NF because `children` is a non-atomic colu
 |       3 | Doe Doe  |
 ----------------------
 
+[user_children]
 ----------------------
 | user_id | child_id |
 ----------------------
@@ -135,6 +143,7 @@ Storing data like above violates the 1NF because `children` is a non-atomic colu
 We now have a new table representing the relationship between entities. Now, every time `Doe Doe` data changes, we don't have to worry about updating the same data for `John Doe` or `Jane Doe`. Moreover, we can now easily query or modify relationships without the need for complex string matching and/or parsing. We can also model a more fine-grained table like below (note that more fine-grained != better).
 
 ```text
+[user_information]
 ----------------------
 | user_id | name     |
 ----------------------
@@ -143,6 +152,7 @@ We now have a new table representing the relationship between entities. Now, eve
 |       3 | Doe Doe  |
 ----------------------
 
+[user_relationships]
 ---------------------------------------
 | user_id | relation  | other_user_id |
 ---------------------------------------
@@ -160,6 +170,7 @@ That being said, having JSON columns like mentioned above violates the 1NF. It i
 With JSON, there is another way to violate the 1NF: tables with a variable number of properties.
 
 ```text
+[user_information]
 --------------------------------------------------------------------------------------
 | user_id | name     | misc_info                                                     |
 --------------------------------------------------------------------------------------
@@ -189,9 +200,10 @@ These criticisms, however, are not unique to 1NF but are applicable to the highe
 
 I found it hard going into the next normal forms without fully knowing what a functional dependency is. After all, it is the essence that the second and third normal forms are trying to reinforce. Let's see what it is all about.
 
-Formally, a property `A` is functionally dependent on a property `B` (`B` -> `A`), only when in any given point in time, there only exists a single mapping from `B` to `A`, meaning by knowing `B` we can always infer what `A` is.
+Formally, a property `A` is functionally dependent on a property `B` (`B` -> `A`), only when in any given point in time, there exists only a single mapping from `B` to `A`, meaning by knowing `B` we can always infer what `A` is.
 
 ```text
+[books]
 ----------------------------------------------------------------
 | isbn   | author   | title                                    |
 ----------------------------------------------------------------
@@ -211,6 +223,7 @@ Formally, assume that a property `A` is already functionally dependent on a prop
 In practice, full functional dependency is used in contexts where composite keys are present. For a property to be fully functionally dependent on the composite key, it must not provide any fact to any subset of the composite key.
 
 ```text
+[ratings]
 -----------------------------------------
 | isbn   | user_id | user_name | rating |
 -----------------------------------------
@@ -227,6 +240,7 @@ Let's look at the above example, assume that `isbn` and `user_id` are a composit
 Formally, assume that a property `A` is already functionally dependent on a property (or set of properties) `B` (`B` -> `A`). For `A` to be **partial** functionally dependent on `B`, it **must not** be fully functionally dependent on `B`.
 
 ```text
+[ratings]
 -----------------------------------------
 | isbn   | user_id | user_name | rating |
 -----------------------------------------
@@ -236,9 +250,89 @@ Formally, assume that a property `A` is already functionally dependent on a prop
 -----------------------------------------
 ```
 
-Still using the same example in [Full functional dependency](#full-functional-dependency) section, under the same assumption that `isbn` and `user_id` are a composite key, but now let's focus on `user_name` instead of `rating`. Just like with `rating`, we can say that `user_name` is functionally dependent on `isbn` and `user_id` (`isbn`, `user_id` -> `user_name`) because with any given combination of `isbn` and `user_id` we can only get one single value of `user_name`. But **unlike** `rating`, `user_name` **is not** fully functionally dependent on `isbn` and `user_id`. Because by using just `user_id`, a proper subset of `isbn` and `user_id` composite key, we can uniquely infer the `user_name`. In another word, `user_name` is also functionally dependent on `user_id`. This causes it to be partially functionally dependent on `isbn` and `user_id`.
+Still using the same example in [full functional dependency](#full-functional-dependency) section, under the same assumption that `isbn` and `user_id` are a composite key, but now let's focus on `user_name` instead of `rating`. Just like with `rating`, we can say that `user_name` is functionally dependent on `isbn` and `user_id` (`isbn`, `user_id` -> `user_name`) because with any given combination of `isbn` and `user_id` we can only get one single value of `user_name`. But **unlike** `rating`, `user_name` **is not** fully functionally dependent on `isbn` and `user_id`. Because by using just `user_id`, a proper subset of `isbn` and `user_id` composite key, we can uniquely infer the `user_name`. In other words, `user_name` is also functionally dependent on `user_id`, this is a partial functional dependency.
 
-> To be continued.
+## Second normal form
+
+A table satisfies the second normal form (2NF) only when:
+
+- It already satisfies the first normal form.
+- There is no partial dependency between the key and any non-key columns in it.
+
+So why does the second normal form not allow partial functional dependency? Because it causes data redundancy, a.k.a. duplicate data. Let's revisit the example described in the [functional dependency](#functional-dependency) section.
+
+```text
+[ratings]
+-----------------------------------------
+| isbn   | user_id | user_name | rating |
+-----------------------------------------
+| 000001 |   00002 | A. Readr  |      4 |
+| 000001 |   00001 | Avid R.   |      5 |
+| 000002 |   00002 | A. Readr  |      3 |
+-----------------------------------------
+```
+
+As discussed before, we can see that `user_name` is partially dependent on `user_id`, which makes it a 2NF violation. The bad thing about this is that it enables the `user_name` data to be redundant. When we try to update the name of a user, say `user_id` is `00002`, we would need to update the name in multiple records. This is an update anomaly. We may argue that, in this case, data redundancy is not a real problem, because it will not cause inconsistency issues since the SQL query for such an update is guaranteed to be atomic.
+
+```sql
+UPDATE 'ratings'
+SET
+    'user_name' = "A whole new name"
+WHERE
+    'user_id' = '00002';
+```
+
+But the problems can go beyond just inconsistency issues, they can lead to the loss of data. For example, consider the user `00099`. Since they have not rated any book yet in the non-normalized table, we have no way to know their `user_name`. This is an insert anomaly. Similarly, if user `00001` deletes their only rating, we lose the information that their `user_name` is `Avid R.`. This is a delete anomaly.
+
+On a more practical standpoint, an update anomaly may also slow down write speed. Since multiple records need to be updated, the database may need to load multiple physical files and update them all, leading to more rows needing to be locked, more pages or indexes needing to be scanned, using more resources (CPU, RAM). With all that being said, how do we transform this example so that it satisfies the 2NF?
+
+```text
+[ratings]
+-----------------------------
+| isbn   | user_id | rating |
+-----------------------------
+| 000001 |   00002 |      4 |
+| 000001 |   00001 |      5 |
+| 000002 |   00002 |      3 |
+-----------------------------
+
+[user_information]
+-----------------------
+| user_id | user_name |
+-----------------------
+|   00001 | Avid R.   |
+|   00002 | A. Readr  |
+|   00099 | Anon U.   |
+-----------------------
+```
+
+We now separate the previous table into two separate tables, one stores the ratings, another stores the user information. With this structure, we eliminate the partial dependency between the `user_id` and `user_name`, making them satisfy the 2NF. The benefit is now every time we need to update the user information, we only need to update one record in the user information table, eliminating update anomalies. And even without ratings, we still know user `00099` information, which eliminates the insert anomaly. The delete anomaly was also eliminated as user `00001` can now delete their ratings without causing any loss of the user information.
+
+Since the 2NF encourages splitting a single table into multiple tables to eliminate partial dependency. It may have an impact on read performance. We assume that with every rating, we also need to know the name of the person who did the rating. It is reasonable to store the `user_name` together with the ratings, especially if this rating is queried very often, removes the need to join tables frequently. We may design the tables like the following.
+
+```text
+[ratings_with_user_name]
+-----------------------------------------
+| isbn   | user_id | user_name | rating |
+-----------------------------------------
+| 000001 |   00002 | A. Readr  |      4 |
+| 000001 |   00001 | Avid R.   |      5 |
+| 000002 |   00002 | A. Readr  |      3 |
+-----------------------------------------
+
+[user_information]
+-----------------------
+| user_id | user_name |
+-----------------------
+|   00001 | Avid R.   |
+|   00002 | A. Readr  |
+|   00099 | Anon U.   |
+-----------------------
+```
+
+With this structure, it ensures no insert or delete anomaly, but it reintroduces the update anomaly. The trade-off of such a de-normalized structure is that it may improve read performance while possibly degrading write performance and can lead to inconsistent data. It is ultimately dependent on the use case for us to decide which is the best approach for this kind of trade-off.
+
+## To be continued
 
 ## References
 
