@@ -3,8 +3,8 @@ title = "Dual Write"
 date = "2024-12-23T19:27:42+07:00"
 lastmod = "2025-03-05T19:27:42+07:00"
 author = "trviph"
-tags = ["backend", "data-consistency"]
-keywords = ["backend", "data-consistency"]
+tags = ["dual-write", "backend", "data-consistency", "distributed-systems", "microservices", "database", "message-broker", "system-design"]
+keywords = ["dual write pattern", "data inconsistency problem", "distributed transaction", "microservices data consistency", "transactional outbox", "listen to yourself pattern", "change data capture", "backend data handling", "reliable messaging", "eventual consistency", "partial failure", "database updates", "API calls", "inter-service communication"]
 cover = "/img/dual-write/intro-light.vi.svg"
 coverCaption = ""
 showFullContent = false
@@ -20,7 +20,7 @@ thường sẽ là máy chủ tiếp tục gửi dữ liệu đã được xử 
 hiện xử lý tiếp nghiệp vụ. Quá trình này được gọi là dual write, hay còn được gọi là multi-write hoặc
 sync-write.
 
-# Vấn Đề
+## Vấn Đề
 
 Pattern này nhìn chung có vẻ dễ hiểu, dễ cài đặt, vậy cái vấn đề mà nó mang lại là gì?
 Vấn đề chính của pattern này là nó dễ bị lỗi, mà khi đã lỗi rồi thì sẽ thường dẫn đến các lỗi
@@ -40,7 +40,7 @@ có vấn đề, dẫn đến mất kết nối, hoặc có thể do máy chủ 
 được, hoặc chỉ đơn giản do lỗi con người, truyền sai schema dữ liệu, gọi sai API, ... Cho dù lý do có là
 gì đi nữa, thì nghĩa vụ của chúng ta vẫn phải là khắc phục được nó.
 
-## Ví Dụ Về Dual Write Trong E-commerce
+### Ví Dụ Về Dual Write Trong E-commerce
 
 Trong các hệ thống e-commerce, để có thể dễ dàng scale out hệ thống và các team kỹ sư, kiến trúc của các hệ
 thống này thường sẽ được chia ra thành nhiều hệ thống, service nhỏ với các boundary được định nghĩa rõ ràng.
@@ -68,12 +68,12 @@ hệ thống quản lý kho thất bại trong việc thông báo sản phẩm m
 này không tồn tại trên sàn, người mua không thể tìm kiếm ra được. Khiến người bán bị mất đi khách hàng ảnh hưởng đến
 doanh thu của họ, có thể dẫn đến thiệt hại về uy tín cho sàn e-commerce trong cộng đồng người bán.
 
-# Một Số Giải Pháp Không Hiệu Quả
+## Một Số Giải Pháp Không Hiệu Quả
 
 Giờ chúng ta biết được dual write là gì và các vấn đề mà nó mang lại. Hãy cùng nhau tìm hiểu một số cách
 sẽ *không* thể khắc phục được các vấn đề này.
 
-## Khôi Phục Lại Dữ Liệu
+### Khôi Phục Lại Dữ Liệu
 
 Liệu chúng ta có thể khôi phục lại dữ liệu trong trường hợp thất bại được không? Được, tuy nhiên việc
 khôi phục dữ liệu cũng có thể bị thất bại nên chúng ta phải làm gì tiếp nếu nó cũng thất bại?
@@ -85,14 +85,14 @@ ghi vào database cũng có thể thất bại.
 
 Theo ý kiến cá nhân tôi, thì các này sẽ trở nên phức tạp rất nhanh mà không mang lại hiệu quả nào.
 
-## Lưu Dữ Liệu Sau Khi Gửi
+### Lưu Dữ Liệu Sau Khi Gửi
 
 Nếu chúng ta ghi dữ liệu vào database chỉ sau khi đã thông báo thành công cho các service downstream thì sao?
 Hướng tiếp cận này cũng tương tự như hướng tiếp cận chỉ commit database sau khi thông báo đã trao đổi ở trên,
 việc viết vào database không được đảm bảo sẽ thành công, nên chỉ thay đổi trình tự ghi dữ liệu sẽ không giải
 quyết được vấn đề.
 
-## Thử Lại
+### Thử Lại
 
 Nếu có lỗi xảy ra, thường chỉ cần thử lại sẽ là một cách giải quyết đủ tốt.
 Tuy nhiên, ta cần phải chú trọng đến các vấn đề như thử lại bao nhiều lần, khoảng chờ giữa các lần
@@ -105,23 +105,23 @@ Sử dụng exponential backoff để thử lại thì sao? Hướng này có th
 ta* bị lỗi và crash trong khoảng thời gian này, thì sau khi hệ thống phục hồi lại ta sẽ mất đi context của
 việc hệ thống đang làm trước đó. Ta cần phải ghi nhớ được context, state của hệ thống bằng một cách nào đó.
 
-# Một Số Giải Pháp Hiệu Quả
+## Một Số Giải Pháp Hiệu Quả
 
 Một số pattern để xử lý dual write một cách hiệu quả là:
 
-- Transactional Outbox Pattern
-- Listen to Yourself Pattern
-- Change Data Capture Pattern
+- Transactional Outbox Pattern: Đảm bảo tính atomicity bằng cách cập nhật dữ liệu nghiệp vụ và đồng thời lưu trữ message vào bảng outbox trong một transaction duy nhất, các message này sẽ được đọc và gửi đi bởi một process khác.
+- Listen to Yourself Pattern: Gửi một sự kiện thông báo thay đổi mong muốn của dữ liệu, và thực hiện thay đổi khi nhận được sự kiện này.
+- Change Data Capture Pattern: Tận dụng tính chất durability của cơ sở dữ liệu bằng cách đọc transaction log để nắm bắt các cập nhật của dữ liệu.
 
 Trong phần này, chúng ta đã điểm mặt gọi tên một số pattern dùng để xử lý dual write một cách hiệu quả
 mà không đi vào bất kỳ một chi tiết nào, vì bài viết này theo tôi cũng đã khá dài ~và tôi khá lười~.
 Trong tương lai tôi có thể sẽ viết về các pattern này, nhưng hiện tại nếu bạn muốn tìm hiểu thêm thì phải
 tự lăn vào bếp thôi :))
 
-# Đọc Thêm
+## Đọc Thêm
 
-- https://www.confluent.io/blog/dual-write-problem/
-- https://newsletter.systemdesignclassroom.com/p/i-have-seen-this-mistake-in-production
-- https://microservices.io/patterns/data/transactional-outbox.html
-- https://debezium.io/blog/2020/02/10/event-sourcing-vs-cdc/
-- https://developers.redhat.com/articles/2021/09/21/distributed-transaction-patterns-microservices-compared
+- <https://www.confluent.io/blog/dual-write-problem/>
+- <https://newsletter.systemdesignclassroom.com/p/i-have-seen-this-mistake-in-production>
+- <https://microservices.io/patterns/data/transactional-outbox.html>
+- <https://debezium.io/blog/2020/02/10/event-sourcing-vs-cdc/>
+- <https://developers.redhat.com/articles/2021/09/21/distributed-transaction-patterns-microservices-compared>

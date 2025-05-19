@@ -3,8 +3,8 @@ title = "Dual Write"
 date = "2024-12-23T19:27:42+07:00"
 lastmod = "2025-03-05T19:27:42+07:00"
 author = "trviph"
-tags = ["backend", "data-consistency"]
-keywords = ["backend", "data-consistency"]
+tags = ["dual-write", "backend", "data-consistency", "distributed-systems", "microservices", "database", "message-broker", "system-design"]
+keywords = ["dual write pattern", "data inconsistency problem", "distributed transaction", "microservices data consistency", "transactional outbox", "listen to yourself pattern", "change data capture", "backend data handling", "reliable messaging", "eventual consistency", "partial failure", "database updates", "API calls", "inter-service communication"]
 cover = "/img/dual-write/intro-light.en.svg"
 coverCaption = ""
 showFullContent = false
@@ -19,7 +19,7 @@ or update that data into the database before also transmitting the data to the n
 via a message broker or an API. This data processing pattern is called a dual write,
 sometimes also called multi-write or sync-write.
 
-# Problem
+## Problem
 
 This pattern seems to be pretty intuitive, so what is its problem?
 The main problem with this pattern is that it is prone to failures that can often lead to
@@ -38,7 +38,7 @@ downtime due to errors or maintenance, or it was something as simple as human er
 a wrong schema to a wrong API, etc. But whatever the cause, the data is now mismatched and we must
 somehow fix it.
 
-## Examples Of Dual Write In E-commerce
+### Examples Of Dual Write In E-commerce
 
 In e-commerce systems, to easily scale out the overall systems and engineering teams. The architecture is often
 separated into several services with defined boundaries. Some of the most crucial services,
@@ -64,12 +64,12 @@ be searchable. However, if the inventory management system fails to notify the s
 the listing will never be visible and the seller will lose their potential customer and income.
 This can possibly damage the reputation of the e-commerce platform among sellers.
 
-# Some Solutions That Do Not Work
+## Some Solutions That Do Not Work
 
 Now that we know what dual writing is and the problems it brings, let's discuss some solutions
 and why they won't work.
 
-## Revert The Data Back
+### Revert The Data Back
 
 Can we revert the data back? Yes, but a revert is also a fallable operation,
 so what if the revert also fails, not to mention we have to store some kind of state before reverting.
@@ -79,13 +79,13 @@ we won't need to store any state then? A commit is also a fallable operation.
 
 In my humble opinion, this approach gets messy really quickly.
 
-## Save After Sent
+### Save After Sent
 
 How about we only write the data to the database if we succeed in sending it to downstream services?
 This approach is similar with committing after sent we have discussed above, a write to the database
 is not guarantee to success. Simply switching the order of operations solve nothing.
 
-## Retry Again
+### Retry Again
 
 If there is a failure retrying again seems to be a good enough solution.
 But let's consider how many times we should retry and what is the interval between them?
@@ -99,21 +99,21 @@ This could work but what if *our* service fails and crashes while retrying? By t
 it is up again, we will surely lose the context of what we were trying to do.
 We will need to store some kind of state for this approach to work. We are getting closer.
 
-# Some Solutions That Do Work
+## Some Solutions That Do Work
 
 In this section, we will be listing some patterns to handle the dual write properly.
 We won't go into any details here, other than just listing their names so we are made aware
 of their existence since this post is quite long already. I may write up more posts about them.
 But for now, if you want to learn more, you have to do it on your own. These patterns are called:
 
-- Transactional Outbox Pattern
-- Listen to Yourself Pattern
-- Change Data Capture Pattern
+- Transactional Outbox Pattern: Ensure atomicity by updating the business data change and storing the message in an outbox table using a single database transaction, with messages sent later by a separate process.
+- Listen to Yourself Pattern: Publish an event representing the intended data change, then consume this event to perform the actual database update.
+- Change Data Capture Pattern: Leveraging the database's durability guarantee by reading its transaction log to capture changes and send them as messages.
 
-# Read More
+## Read More
 
-- https://www.confluent.io/blog/dual-write-problem/
-- https://newsletter.systemdesignclassroom.com/p/i-have-seen-this-mistake-in-production
-- https://microservices.io/patterns/data/transactional-outbox.html
-- https://debezium.io/blog/2020/02/10/event-sourcing-vs-cdc/
-- https://developers.redhat.com/articles/2021/09/21/distributed-transaction-patterns-microservices-compared
+- <https://www.confluent.io/blog/dual-write-problem/>
+- <https://newsletter.systemdesignclassroom.com/p/i-have-seen-this-mistake-in-production>
+- <https://microservices.io/patterns/data/transactional-outbox.html>
+- <https://debezium.io/blog/2020/02/10/event-sourcing-vs-cdc/>
+- <https://developers.redhat.com/articles/2021/09/21/distributed-transaction-patterns-microservices-compared>
