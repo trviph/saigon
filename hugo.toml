@@ -3,9 +3,6 @@ defaultContentLanguage = 'en'
 defaultContentLanguageInSubdir = true
 theme = 're-terminal'
 
-[services.disqus]
-shortname = 'sssplop'
-
 [params]
 themeColor = 'paper'
 centerTheme = true
