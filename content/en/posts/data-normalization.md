@@ -332,6 +332,66 @@ Since the 2NF encourages splitting a single table into multiple tables to elimin
 
 With this structure, it ensures no insert or delete anomaly, but it reintroduces the update anomaly. The trade-off of such a de-normalized structure is that it may improve read performance while possibly degrading write performance and can lead to inconsistent data. It is ultimately dependent on the use case for us to decide which is the best approach for this kind of trade-off.
 
+## Third normal form
+
+A table satisfies the third normal form (3NF) when:
+
+- Is in the second normal form
+- There is no transitive dependency between the key column and any non-key column
+
+A transitive dependency can be understood as when a non-key column is functionally dependent on another non-key column, which in turn is functionally dependent on the key column. More formally, if we have a table with `A`, `B`, and `C` attributes and `C` is the key, then if:
+
+- If Non-key `A` is functionally dependent on non-key `B` (`B` -> `A`)
+- And non-key `B` is functionally dependent on key `C` (`C` -> `B`)
+- Then non-key `A` is transitively dependent on key `C` (`C` -> `B` -> `A`)
+
+To simplify, the 3NF ensures that in a table, no non-key column can functionally depend on another non-key column. The problems that the 3NF trying to solve? The same as the 2NF, let's look at an example to understand.
+
+```text
+[book_with_publisher]
+--------------------------------------------------------------------------------------------
+| isbn   | title                                    | publisher_id | publisher_name        |
+--------------------------------------------------------------------------------------------
+| 000001 | John Doe's Introduction to Life          |        P0001 | First Time Publishing |
+| 000002 | John Doe's Introduction to Life (Vol. 2) |        P0002 | Pub. Ltd.             |
+| 000003 | How to Laugh!                            |        P0001 | First Time Publishing |
+| 000004 | The Memory.                              |        P0003 | Yet Another Publisher |
+--------------------------------------------------------------------------------------------
+```
+
+In the `book_with_publisher` table, with `isbn` as the key. It violates the 3NF by having `publisher_name`, a non-key column, functionally dependent on `publisher_id`, another non-key column. This example also suffers from the same set of problems mentioned in the 2NF, which are:
+
+- Insert anomaly: If a publisher has never published any book, it is impossible to know its information
+- Delete anomaly: If the book with `isbn` of `000002` is removed, the information of `P0002` publisher will be lost
+- Update anomaly: If the `publisher_name` needs to change, we'd need to update multiple records
+- Data redundancy: The same publisher name is stored in multiple places
+
+To satisfy the 3NF, we need to elimate the transitive dependency of `isbn` -> `publisher_id` -> `publisher_name` by normalizing the table into the following two tables:
+
+```text
+[books]
+--------------------------------------------------------------------
+| isbn   | title                                    | publisher_id |
+--------------------------------------------------------------------
+| 000001 | John Doe's Introduction to Life          |        P0001 |
+| 000002 | John Doe's Introduction to Life (Vol. 2) |        P0002 |
+| 000003 | How to Laugh!                            |        P0001 |
+| 000004 | The Memory.                              |        P0003 |
+--------------------------------------------------------------------
+
+[publishers]
+----------------------------------------
+| publisher_id | publisher_name        |
+----------------------------------------
+|        P0001 | First Time Publishing |
+|        P0002 | Pub. Ltd.             |
+|        P0003 | Yet Another Publisher |
+|        P0004 | Anon Publishing       |
+----------------------------------------
+```
+
+As we've seen with 1NF and 2NF, this normalization improves data integrity and reduces redundancy. However, it's worth remembering the common trade-off: more tables mean more joins for certain queries, which can impact read performance. Deciding when and how much to normalize often comes down to balancing these factors for your specific use case.
+
 ## To be continued
 
 ## References
